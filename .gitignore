@@ -1,0 +1,24 @@
+# Arquivos de instruções
+assets/fotos/INSTRUCOES-FOTOS.txt
+assets/LEIA-ME-MASCOTE.txt
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Arquivos temporários
+*.tmp
+*.temp
+

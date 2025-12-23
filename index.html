@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Para Você ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="intro">
+  <!-- Partículas de fundo -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Neve caindo -->
+  <div class="snow-container"></div>
+
+  <!-- Gatinhos flutuantes decorativos com gorros de natal -->
+  <div class="cats-container">
+    <div class="floating-cat natalino">🎄🐱</div>
+    <div class="floating-cat natalino">🎅😸</div>
+    <div class="floating-cat natalino">🎁😻</div>
+    <div class="floating-cat natalino">❄️🐾</div>
+  </div>
+
+  <!-- Papai Noel decorativo -->
+  <div class="papai-noel">🎅</div>
+
+  <div class="intro-box">
+    <!-- Slideshow de fotos -->
+    <div class="fotos-slideshow">
+      <div class="slideshow-container">
+        <img src="assets/fotos/foto1.jpg" alt="Nossa foto" class="slide active" id="slide-1">
+        <img src="assets/fotos/foto2.jpg" alt="Nossa foto" class="slide" id="slide-2">
+        <img src="assets/fotos/foto3.jpg" alt="Nossa foto" class="slide" id="slide-3">
+        <img src="assets/fotos/foto4.jpg" alt="Nossa foto" class="slide" id="slide-4">
+      </div>
+      <div class="slideshow-dots">
+        <span class="dot active" onclick="mostrarSlide(1)"></span>
+        <span class="dot" onclick="mostrarSlide(2)"></span>
+        <span class="dot" onclick="mostrarSlide(3)"></span>
+        <span class="dot" onclick="mostrarSlide(4)"></span>
+      </div>
+    </div>
+    
+    <!-- Mascote Lina Trova -->
+    <div class="mascote-container">
+      <img src="assets/lina-trova.png" alt="Lina Trova" class="mascote-img" id="mascote-intro" onerror="this.style.display='none'">
+      <div class="mascote-nome">Lina Trova</div>
+    </div>
+    <div class="heart-icon">❄️</div>
+    <h1>Meu amor, isso aqui é só um pedacinho do quanto você é tudo pra mim <span class="cat-inline">🎄</span></h1>
+    <p>Eu te admiro pela mulher que você é.<br>
+Forte, sensível, determinada.<br>
+Do tipo que cai, levanta e segue — sempre sendo você.<br><br>
+Nada disso é sobre presente.<br>
+É sobre cuidado, carinho e tudo que a gente constrói juntos.<br>
+Mesmo nos dias difíceis, você segue sendo meu lugar seguro.<br><br>
+Separei alguns presentinhos pra você.<br>
+Sem pressa, sem regra.<br>
+Escolhe quando quiser, do seu jeito.</p>
+    <p class="subtitle">Clique quando estiver pronta 🐾</p>
+    <button onclick="entrar()" class="btn-enter">
+      <span>Entrar no presente</span>
+      <span class="btn-arrow">→</span>
+    </button>
+  </div>
+
+  <script>
+    // Slideshow de fotos
+    let slideAtual = 1;
+    const totalSlides = 4;
+    
+    function mostrarSlide(n) {
+      const slides = document.querySelectorAll('.slide');
+      const dots = document.querySelectorAll('.dot');
+      
+      slideAtual = n;
+      
+      if (n > totalSlides) { slideAtual = 1; }
+      if (n < 1) { slideAtual = totalSlides; }
+      
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      const slideAtivo = document.getElementById(`slide-${slideAtual}`);
+      const dotAtivo = dots[slideAtual - 1];
+      
+      if (slideAtivo) {
+        slideAtivo.classList.add('active');
+        // Verifica se a imagem existe, senão esconde
+        slideAtivo.onerror = function() {
+          this.style.display = 'none';
+        };
+      }
+      if (dotAtivo) {
+        dotAtivo.classList.add('active');
+      }
+    }
+    
+    // Troca automática a cada 3 segundos
+    function proximoSlide() {
+      mostrarSlide(slideAtual + 1);
+    }
+    
+    // Inicia slideshow automático
+    setInterval(proximoSlide, 3000);
+    
+    // Cria efeito de neve
+    function criarNeve() {
+      const snowContainer = document.querySelector('.snow-container');
+      if (!snowContainer) return;
+      
+      const flocos = ['❄', '❅', '❆', '✻', '✼', '✽'];
+      
+      function criarFloco() {
+        const floco = document.createElement('div');
+        floco.className = 'snowflake';
+        floco.textContent = flocos[Math.floor(Math.random() * flocos.length)];
+        floco.style.left = Math.random() * 100 + '%';
+        floco.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        floco.style.animationDelay = Math.random() * 2 + 's';
+        floco.style.fontSize = (Math.random() * 10 + 10) + 'px';
+        snowContainer.appendChild(floco);
+        
+        setTimeout(() => {
+          floco.remove();
+        }, 5000);
+      }
+      
+      // Cria flocos continuamente
+      setInterval(criarFloco, 300);
+      
+      // Cria alguns flocos iniciais
+      for (let i = 0; i < 20; i++) {
+        setTimeout(criarFloco, i * 150);
+      }
+    }
+    
+    // Inicia neve quando página carregar
+    document.addEventListener('DOMContentLoaded', criarNeve);
+    
+    function entrar() {
+      window.location.href = "home.html?id=aline-natal-2025";
+    }
+    
+    // Easter egg: clicar várias vezes no coração mostra gatinhos
+    let clickCount = 0;
+    document.addEventListener('DOMContentLoaded', function() {
+      const heart = document.querySelector('.heart-icon');
+      if (heart) {
+        heart.addEventListener('click', function() {
+          clickCount++;
+          if (clickCount >= 3) {
+            criarChuvaDeGatinhos();
+            clickCount = 0;
+          }
+        });
+      }
+    });
+    
+    // Função para criar chuva de gatinhos (easter egg)
+    function criarChuvaDeGatinhos() {
+      const gatinhos = ['🐱', '😸', '😻', '😽', '🐾', '🙀', '😿', '😾'];
+      
+      // Adiciona CSS se não existir
+      if (!document.getElementById('cat-rain-style')) {
+        const style = document.createElement('style');
+        style.id = 'cat-rain-style';
+        style.textContent = `
+          @keyframes catRain {
+            0% {
+              transform: translateY(0) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(calc(100vh + 100px)) rotate(360deg);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      for (let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          const cat = document.createElement('div');
+          cat.textContent = gatinhos[Math.floor(Math.random() * gatinhos.length)];
+          cat.style.position = 'fixed';
+          cat.style.fontSize = '50px';
+          cat.style.pointerEvents = 'none';
+          cat.style.zIndex = '10000';
+          cat.style.left = Math.random() * 100 + '%';
+          cat.style.top = '-50px';
+          cat.style.animation = 'catRain 3s linear forwards';
+          document.body.appendChild(cat);
+          
+          setTimeout(() => {
+            cat.remove();
+          }, 3000);
+        }, i * 50);
+      }
+    }
+  </script>
+
+</body>
+</html>

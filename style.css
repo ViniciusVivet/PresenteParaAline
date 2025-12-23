@@ -1,0 +1,1648 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 20%, #0f3460 40%, #1a3a52 60%, #2d4a5c 80%, #0d1b2a 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+  overflow-x: hidden;
+  position: relative;
+  overflow-y: auto;
+}
+
+body > *:not(.particles):not(.cats-container):not(.mascote-flutuante):not(.snow-container):not(.papai-noel) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Efeito de neve caindo */
+.snow-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5em;
+  font-family: Arial;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+  animation: snowfall linear infinite;
+  top: -10px;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) translateX(50px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Papai Noel decorativo */
+.papai-noel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 60px;
+  z-index: 100;
+  animation: papaiNoelFloat 3s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.papai-noel:hover {
+  transform: scale(1.2) rotate(10deg);
+}
+
+@keyframes papaiNoelFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+}
+
+/* Gatinhos natalinos */
+.floating-cat.natalino {
+  font-size: 45px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)) drop-shadow(0 0 10px rgba(255, 0, 0, 0.2));
+  animation: catFloatNatal 15s infinite ease-in-out;
+}
+
+@keyframes catFloatNatal {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-30px) translateX(20px) rotate(5deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-60px) translateX(-15px) rotate(-5deg);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translateY(-30px) translateX(10px) rotate(3deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.6;
+  }
+}
+
+/* Mascote Lina Trova - Intro */
+.mascote-container {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.mascote-img {
+  width: 150px;
+  height: auto;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: mascoteFloat 3s ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px;
+}
+
+@keyframes mascoteFloat {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
+.mascote-nome {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Dancing Script', cursive;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Mascote Flutuante - Página de Presentes */
+.mascote-flutuante {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.mascote-flutuante:hover {
+  transform: scale(1.1);
+}
+
+.mascote-img-flutuante {
+  width: 120px;
+  height: auto;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 5px;
+  animation: mascotePulse 2s ease-in-out infinite;
+}
+
+@keyframes mascotePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 15px 40px rgba(233, 69, 96, 0.5);
+  }
+}
+
+@keyframes mascoteCelebrate {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.15) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  75% {
+    transform: scale(1.15) rotate(-3deg);
+  }
+}
+
+/* Balão de fala da mascote */
+.mascote-balao {
+  position: absolute;
+  bottom: 140px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  color: #1a1a2e;
+  padding: 15px 20px;
+  border-radius: 20px;
+  max-width: 250px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: balaoAppear 0.5s ease-out;
+  z-index: 101;
+}
+
+.mascote-balao::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  right: 30px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rgba(255, 255, 255, 0.95);
+}
+
+.mascote-balao p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+@keyframes balaoAppear {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Gatinhos flutuantes */
+.cats-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-cat {
+  position: absolute;
+  font-size: 40px;
+  animation: catFloat 15s infinite ease-in-out;
+  opacity: 0.6;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.floating-cat:nth-child(1) {
+  left: 5%;
+  top: 10%;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.floating-cat:nth-child(2) {
+  left: 85%;
+  top: 20%;
+  animation-delay: 3s;
+  animation-duration: 20s;
+}
+
+.floating-cat:nth-child(3) {
+  left: 10%;
+  top: 70%;
+  animation-delay: 6s;
+  animation-duration: 16s;
+}
+
+.floating-cat:nth-child(4) {
+  left: 90%;
+  top: 80%;
+  animation-delay: 2s;
+  animation-duration: 19s;
+}
+
+.floating-cat:nth-child(5) {
+  left: 50%;
+  top: 5%;
+  animation-delay: 4s;
+  animation-duration: 17s;
+}
+
+@keyframes catFloat {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.4;
+  }
+  25% {
+    transform: translateY(-30px) translateX(20px) rotate(10deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-60px) translateX(-15px) rotate(-10deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translateY(-30px) translateX(10px) rotate(5deg);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0.4;
+  }
+}
+
+/* Gatinho inline no texto */
+.cat-inline {
+  display: inline-block;
+  animation: catWiggle 3s ease-in-out infinite;
+  font-size: 0.9em;
+}
+
+@keyframes catWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+/* Gatinho decorativo no título */
+.cat-decoration {
+  display: inline-block;
+  margin-left: 15px;
+  animation: catBounce 2s ease-in-out infinite;
+  font-size: 0.8em;
+}
+
+@keyframes catBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.1); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Partículas flutuantes */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: float 20s infinite;
+}
+
+.particle:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+  animation-duration: 15s;
+}
+
+.particle:nth-child(2) {
+  left: 20%;
+  animation-delay: 2s;
+  animation-duration: 18s;
+}
+
+.particle:nth-child(3) {
+  left: 30%;
+  animation-delay: 4s;
+  animation-duration: 20s;
+}
+
+.particle:nth-child(4) {
+  left: 40%;
+  animation-delay: 1s;
+  animation-duration: 16s;
+}
+
+.particle:nth-child(5) {
+  left: 50%;
+  animation-delay: 3s;
+  animation-duration: 19s;
+}
+
+.particle:nth-child(6) {
+  left: 60%;
+  animation-delay: 5s;
+  animation-duration: 17s;
+}
+
+.particle:nth-child(7) {
+  left: 70%;
+  animation-delay: 2.5s;
+  animation-duration: 21s;
+}
+
+.particle:nth-child(8) {
+  left: 80%;
+  animation-delay: 4.5s;
+  animation-duration: 18s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* INTRO PAGE */
+.intro {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+  z-index: 2;
+}
+
+/* Slideshow de fotos na intro */
+.fotos-slideshow {
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.slideshow-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide {
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+/* Galeria de fotos no modal */
+.galeria-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.galeria-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.slideshow-dots {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active,
+.dot:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.2);
+}
+
+.intro-box {
+  text-align: center;
+  max-width: 600px;
+  padding: 50px 40px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 30px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeInUp 1s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-box::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.heart-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+  animation: heartbeat 2s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.intro-box h1 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.intro-box > p:not(.subtitle) {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 25px;
+  opacity: 0.95;
+  font-weight: 400;
+  position: relative;
+  z-index: 1;
+  text-align: left;
+  max-width: 100%;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin-bottom: 35px;
+  opacity: 0.9;
+  font-weight: 300;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.5px;
+}
+
+button, .btn-enter {
+  margin-top: 20px;
+  padding: 18px 50px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #dc2626 0%, #ef4444 50%, #f87171 100%);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5),
+              0 0 20px rgba(239, 68, 68, 0.3),
+              inset 0 0 20px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
+  z-index: 1;
+  animation: buttonBreatheIntro 4s ease-in-out infinite;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+button::before, .btn-enter::before {
+  content: '❄️';
+  position: absolute;
+  left: 15px;
+  font-size: 16px;
+  opacity: 0.6;
+  animation: snowTwinkle 2s ease-in-out infinite;
+}
+
+@keyframes snowTwinkle {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.1); }
+}
+
+@keyframes buttonBreatheIntro {
+  0%, 100% {
+    box-shadow: 0 10px 30px rgba(220, 38, 38, 0.5),
+                0 0 20px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 10px 35px rgba(220, 38, 38, 0.7),
+                0 0 30px rgba(239, 68, 68, 0.5);
+  }
+}
+
+.btn-enter::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-enter:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-enter:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(233, 69, 96, 0.6),
+              0 0 30px rgba(233, 69, 96, 0.4);
+}
+
+.btn-enter:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.btn-arrow {
+  transition: transform 0.3s ease;
+  font-size: 20px;
+}
+
+.btn-enter:hover .btn-arrow {
+  transform: translateX(5px);
+}
+
+/* Botão voltar ao início */
+.btn-voltar-inicio {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+  z-index: 100;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.btn-voltar-inicio:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.btn-voltar-inicio:active {
+  transform: translateY(0) scale(1);
+}
+
+.btn-voltar-emoji {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.btn-voltar-inicio:hover .btn-voltar-emoji {
+  transform: scale(1.2) rotate(-10deg);
+}
+
+.btn-voltar-texto {
+  font-size: 15px;
+}
+
+/* HOME PAGE - PRESENTES */
+.titulo-presentes {
+  text-align: center;
+  font-size: 42px;
+  margin: 40px 0;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  font-family: 'Dancing Script', cursive;
+  font-weight: 700;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.titulo-emoji {
+  font-size: 40px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+.titulo-emoji:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.titulo-texto {
+  background: linear-gradient(135deg, #fff 0%, #ffd1dc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.presentes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 25px;
+  padding: 30px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 35px 25px;
+  border-radius: 25px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  animation: cardFadeIn 0.6s ease-out backwards;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3),
+              inset 0 0 30px rgba(220, 20, 60, 0.1);
+}
+
+/* Decorações natalinas sutis nos cards */
+.card::after {
+  content: '✨';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  opacity: 0.4;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.2); }
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.card:hover::before {
+  left: 100%;
+}
+
+.card:hover:not(.usado):not(:has(.raspadinha-overlay:hover)) {
+  transform: translateY(-15px) scale(1.08) rotate(2deg);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+              0 0 30px rgba(220, 38, 38, 0.4),
+              0 0 50px rgba(34, 197, 94, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Quando tem overlay, não faz hover no card */
+.card:has(.raspadinha-overlay) {
+  cursor: default;
+}
+
+.card.usado {
+  opacity: 0.7;
+  cursor: pointer;
+  position: relative;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.card.usado:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Status do card */
+.card-status {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.card.usado .card-status {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Overlay da raspadinha */
+.raspadinha-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(100, 100, 100, 0.9) 0%, rgba(80, 80, 80, 0.9) 100%);
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  z-index: 5;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.raspadinha-overlay:active {
+  cursor: grabbing;
+}
+
+  .raspadinha-texto {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    pointer-events: none;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: pulseRaspadinha 2s ease-in-out infinite;
+  }
+  
+  /* Ajustes de toque para mobile */
+  @media (max-width: 768px) {
+    .raspadinha-texto {
+      font-size: 16px;
+    }
+    
+    .raspadinha-overlay {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Área de toque maior para botões */
+    button, .btn-enter, .btn-voltar-inicio {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    .close {
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Melhor espaçamento para toque */
+    .opcao-jantar {
+      min-height: 50px;
+      padding: 15px 18px;
+    }
+  }
+
+@keyframes pulseRaspadinha {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.card-emoji {
+  font-size: 60px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.card:hover:not(.usado) .card-emoji {
+  transform: scale(1.2) rotate(10deg);
+  animation: wiggle 0.5s ease;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: scale(1.2) rotate(10deg); }
+  25% { transform: scale(1.2) rotate(-10deg); }
+  50% { transform: scale(1.2) rotate(10deg); }
+  75% { transform: scale(1.2) rotate(-10deg); }
+}
+
+.card-titulo {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 1;
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #533483 100%);
+  margin: 5% auto;
+  padding: 40px;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              0 0 40px rgba(74, 222, 128, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(20px);
+  max-height: 90vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@keyframes catCelebrateModal {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.3) rotate(180deg);
+  }
+  100% {
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  85% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+/* Opções de jantar */
+.opcao-jantar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.opcao-jantar:hover:not(.escolhida) {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(5px);
+}
+
+.opcao-jantar.escolhida {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
+  cursor: default;
+  filter: grayscale(100%);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Overlay de raspadinha nas opções */
+.raspadinha-overlay-opcao {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(100, 100, 100, 0.95) 0%, rgba(80, 80, 80, 0.95) 100%);
+  border-radius: 12px;
+  cursor: grabbing;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.opcao-emoji {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.opcao-texto {
+  flex: 1;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.opcao-check {
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+@keyframes opcaoEscolhida {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Responsivo para opções de jantar */
+@media (max-width: 768px) {
+  .opcao-jantar {
+    padding: 12px 15px;
+    gap: 12px;
+  }
+  
+  .opcao-emoji {
+    font-size: 24px;
+  }
+  
+  .opcao-texto {
+    font-size: 15px;
+  }
+  
+  .opcao-check {
+    font-size: 20px;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close {
+  color: #fff;
+  float: right;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 20px;
+  transition: transform 0.2s;
+}
+
+.close:hover {
+  transform: scale(1.2);
+}
+
+#modal-body {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* Estilo de papel real para a carta */
+.modal-content.modal-carta {
+  background: #f5f1e8;
+  background-image: 
+    linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+  box-shadow: 
+    0 0 0 1px rgba(0,0,0,0.1),
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    inset 0 0 50px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 50px 40px;
+  max-width: 650px;
+}
+
+.modal-content.modal-carta .close {
+  color: #333;
+  background: rgba(255, 255, 255, 0.8);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-content.modal-carta .close:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.modal-content.modal-carta h2 {
+  color: #2c2c2c;
+}
+
+.carta-papel {
+  position: relative;
+  background: #faf8f3;
+  padding: 50px 45px;
+  margin: -10px -10px 0;
+  border-radius: 8px;
+  box-shadow: 
+    inset 0 0 80px rgba(0, 0, 0, 0.03),
+    0 1px 0 rgba(255, 255, 255, 0.8),
+    0 -1px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.carta-papel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 60px;
+  width: 2px;
+  height: 100%;
+  background: rgba(255, 0, 0, 0.1);
+  opacity: 0.3;
+}
+
+.carta-papel::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    repeating-linear-gradient(
+      transparent,
+      transparent 28px,
+      rgba(0, 0, 0, 0.03) 28px,
+      rgba(0, 0, 0, 0.03) 29px
+    );
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+.carta-conteudo {
+  position: relative;
+  z-index: 2;
+  color: #2c2c2c;
+  font-size: 17px;
+  line-height: 2;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  white-space: pre-line;
+  text-align: left;
+  text-shadow: 0.5px 0.5px 1px rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.3px;
+}
+
+/* Animação de abertura da carta */
+.modal-content.modal-carta {
+  animation: cartaAbrir 0.6s ease-out;
+}
+
+@keyframes cartaAbrir {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) rotateY(-5deg) scale(0.95);
+  }
+  50% {
+    transform: translateY(-5px) rotateY(2deg) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateY(0deg) scale(1);
+  }
+}
+
+/* Responsivo para carta */
+@media (max-width: 768px) {
+  .modal-content.modal-carta {
+    padding: 40px 25px;
+  }
+  
+  .carta-papel {
+    padding: 40px 30px;
+  }
+  
+  .carta-conteudo {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  
+  .carta-papel::before {
+    left: 40px;
+  }
+}
+
+/* Botão do modal com estilo executivo */
+.btn-modal-close {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+  font-family: 'Poppins', sans-serif;
+  animation: buttonBreathe 3s ease-in-out infinite;
+}
+
+.btn-modal-close:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(74, 222, 128, 0.6);
+}
+
+.btn-modal-close:active {
+  transform: translateY(0) scale(1);
+}
+
+@keyframes buttonBreathe {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(74, 222, 128, 0.6),
+                0 0 15px rgba(74, 222, 128, 0.3);
+  }
+}
+
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .intro-box {
+    padding: 40px 30px;
+  }
+  
+  .intro-box h1 {
+    font-size: 28px;
+  }
+  
+  .intro-box > p:not(.subtitle) {
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  
+  .heart-icon {
+    font-size: 50px;
+  }
+  
+  .titulo-presentes {
+    font-size: 32px;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .titulo-emoji {
+    font-size: 32px;
+  }
+  
+  .presentes {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+    padding: 20px 15px;
+  }
+  
+  .card {
+    min-height: 170px;
+    padding: 25px 20px;
+  }
+  
+  .card-emoji {
+    font-size: 50px;
+  }
+  
+  .card-titulo {
+    font-size: 17px;
+  }
+  
+  .btn-enter {
+    padding: 15px 40px;
+    font-size: 16px;
+  }
+  
+  .floating-cat {
+    font-size: 30px;
+  }
+  
+  .cat-decoration {
+    display: block;
+    margin: 10px auto 0;
+    text-align: center;
+  }
+  
+  .btn-voltar-inicio {
+    top: 15px;
+    left: 15px;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+  
+  .btn-voltar-emoji {
+    font-size: 18px;
+  }
+  
+  .btn-voltar-texto {
+    font-size: 13px;
+  }
+  
+  /* Slideshow responsivo */
+  .slideshow-container {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .mascote-img {
+    width: 120px;
+  }
+  
+  .mascote-flutuante {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .mascote-img-flutuante {
+    width: 80px;
+  }
+  
+  .papai-noel {
+    bottom: 15px;
+    right: 15px;
+    font-size: 45px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 30px 20px;
+    margin: 10% auto;
+  }
+  
+  .modal-content h2 {
+    font-size: 24px;
+  }
+  
+  #modal-body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .close {
+    font-size: 28px;
+    top: 10px;
+    right: 15px;
+  }
+  
+  /* Ajustes para neve em mobile */
+  .snowflake {
+    font-size: 1.2em;
+  }
+  
+  /* Gatinhos natalinos menores */
+  .floating-cat.natalino {
+    font-size: 35px;
+  }
+  
+  /* Intro box ajustes */
+  .intro-box {
+    max-width: 90%;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+  }
+  
+  /* Cards em grid menor */
+  .presentes {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .card {
+    min-height: 150px;
+    padding: 20px 15px;
+  }
+  
+  .card-emoji {
+    font-size: 45px;
+  }
+  
+  .card-titulo {
+    font-size: 16px;
+  }
+  
+  .card-status {
+    font-size: 12px;
+  }
+  
+  /* Mascote balão menor */
+  .mascote-balao {
+    font-size: 12px;
+    padding: 8px 12px;
+    max-width: 150px;
+  }
+}
+
+/* Mobile muito pequeno (até 480px) */
+@media (max-width: 480px) {
+  .intro-box h1 {
+    font-size: 24px;
+  }
+  
+  .intro-box > p:not(.subtitle) {
+    font-size: 14px;
+  }
+  
+  .slideshow-container {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .presentes {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 15px 10px;
+  }
+  
+  .card {
+    min-height: 140px;
+    padding: 18px 12px;
+  }
+  
+  .card-emoji {
+    font-size: 40px;
+  }
+  
+  .titulo-presentes {
+    font-size: 28px;
+  }
+  
+  .modal-content {
+    width: 98%;
+    padding: 25px 15px;
+  }
+  
+  .mascote-img-flutuante {
+    width: 70px;
+  }
+  
+  .papai-noel {
+    font-size: 40px;
+  }
+  
+  .btn-voltar-inicio {
+    top: 10px;
+    left: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}

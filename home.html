@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seus Presentes 🎁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Partículas de fundo -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Neve caindo -->
+  <div class="snow-container"></div>
+
+  <!-- Gatinhos flutuantes decorativos com gorros de natal -->
+  <div class="cats-container">
+    <div class="floating-cat natalino">🎄🐱</div>
+    <div class="floating-cat natalino">🎅😸</div>
+    <div class="floating-cat natalino">🎁😻</div>
+    <div class="floating-cat natalino">❄️🐾</div>
+    <div class="floating-cat natalino">🎄😽</div>
+  </div>
+
+  <!-- Papai Noel decorativo -->
+  <div class="papai-noel">🎅</div>
+
+  <!-- Mascote Lina Trova flutuante -->
+  <div class="mascote-flutuante" id="mascote-flutuante">
+    <img src="assets/lina-trova.png" alt="Lina Trova" class="mascote-img-flutuante">
+    <div class="mascote-balao" id="mascote-balao" style="display: none;">
+      <p id="mascote-mensagem"></p>
+    </div>
+  </div>
+
+  <!-- Botão para voltar ao início -->
+  <button class="btn-voltar-inicio" onclick="voltarAoInicio()" title="Voltar ao início">
+    <span class="btn-voltar-emoji">🏠</span>
+    <span class="btn-voltar-texto">Voltar</span>
+  </button>
+
+  <h2 class="titulo-presentes">
+    <span class="titulo-emoji">🎄</span>
+    <span class="titulo-texto">Seus Presentes de Natal</span>
+    <span class="titulo-emoji">🎁</span>
+    <span class="cat-decoration">🎅</span>
+  </h2>
+
+  <div class="presentes">
+    <div class="card" id="massagem" data-presente="massagem">
+      <div class="card-emoji">💆</div>
+      <div class="card-titulo">Vale Massagem</div>
+      <div class="card-status">🎁 Presente disponível</div>
+      <!-- Overlay da raspadinha -->
+      <div class="raspadinha-overlay" id="overlay-massagem">
+        <div class="raspadinha-texto">👆 Raspe para revelar</div>
+      </div>
+    </div>
+    
+    <div class="card" id="jantar" data-presente="jantar">
+      <div class="card-emoji">🍝</div>
+      <div class="card-titulo">Vale Jantar</div>
+      <div class="card-status">🎁 Presente disponível</div>
+      <div class="raspadinha-overlay" id="overlay-jantar">
+        <div class="raspadinha-texto">👆 Raspe para revelar</div>
+      </div>
+    </div>
+    
+    <div class="card" id="carta" data-presente="carta">
+      <div class="card-emoji">💌</div>
+      <div class="card-titulo">Carta Secreta</div>
+      <div class="card-status">🎁 Presente disponível</div>
+      <div class="raspadinha-overlay" id="overlay-carta">
+        <div class="raspadinha-texto">👆 Raspe para revelar</div>
+      </div>
+    </div>
+    
+    <div class="card" id="foto" data-presente="foto">
+      <div class="card-emoji">📸</div>
+      <div class="card-titulo">Foto Especial</div>
+      <div class="card-status">🎁 Presente disponível</div>
+      <div class="raspadinha-overlay" id="overlay-foto">
+        <div class="raspadinha-texto">👆 Raspe para revelar</div>
+      </div>
+    </div>
+    
+    <div class="card" id="video" data-presente="video">
+      <div class="card-emoji">🎥</div>
+      <div class="card-titulo">Vídeo Surpresa</div>
+      <div class="card-status">🎁 Presente disponível</div>
+      <div class="raspadinha-overlay" id="overlay-video">
+        <div class="raspadinha-texto">👆 Raspe para revelar</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para mostrar o presente resgatado -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    function voltarAoInicio() {
+      window.location.href = 'index.html';
+    }
+    
+    // Cria efeito de neve
+    function criarNeve() {
+      const snowContainer = document.querySelector('.snow-container');
+      if (!snowContainer) return;
+      
+      const flocos = ['❄', '❅', '❆', '✻', '✼', '✽'];
+      
+      function criarFloco() {
+        const floco = document.createElement('div');
+        floco.className = 'snowflake';
+        floco.textContent = flocos[Math.floor(Math.random() * flocos.length)];
+        floco.style.left = Math.random() * 100 + '%';
+        floco.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        floco.style.animationDelay = Math.random() * 2 + 's';
+        floco.style.fontSize = (Math.random() * 10 + 10) + 'px';
+        snowContainer.appendChild(floco);
+        
+        setTimeout(() => {
+          floco.remove();
+        }, 5000);
+      }
+      
+      // Cria flocos continuamente
+      setInterval(criarFloco, 300);
+      
+      // Cria alguns flocos iniciais
+      for (let i = 0; i < 20; i++) {
+        setTimeout(criarFloco, i * 150);
+      }
+    }
+    
+    // Inicia neve quando página carregar
+    document.addEventListener('DOMContentLoaded', criarNeve);
+  </script>
+</body>
+</html>
