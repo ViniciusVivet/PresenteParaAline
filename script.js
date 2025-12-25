@@ -25,13 +25,11 @@ let cartasTaroEstado = {
   alivio: false
 };
 
-// Timestamps das cartas de tarô (para controle de 24h)
-let cartasTaroTimestamps = {
-  prosperidade: null,
-  foco: null,
-  casa: null,
-  alivio: null
-};
+// Timestamp da última carta aberta (cooldown global de 24h - só pode abrir uma carta a cada 24h)
+let ultimaCartaAbertaTimestamp = null;
+
+// Variável para armazenar qual carta está aguardando confirmação
+let cartaAguardandoConfirmacao = null;
 
 // Definições das cartas de tarô
 const cartasTaro = {
@@ -615,26 +613,26 @@ function criarHTMLCartasTaro() {
 // TELA FULLSCREEN DO TARÔ
 // ============================================
 
-// Verifica se pode abrir carta (24h de cooldown)
+// Verifica se pode abrir carta (cooldown global de 24h - só pode abrir uma carta a cada 24h)
 function podeAbrirCarta(cartaId) {
-  const timestamp = cartasTaroTimestamps[cartaId];
-  if (!timestamp) return true;
+  // Se nunca abriu nenhuma carta, pode abrir
+  if (!ultimaCartaAbertaTimestamp) return true;
   
   const agora = Date.now();
   const vinteQuatroHoras = 24 * 60 * 60 * 1000; // 24h em ms
-  const tempoPassado = agora - timestamp;
+  const tempoPassado = agora - ultimaCartaAbertaTimestamp;
   
   return tempoPassado >= vinteQuatroHoras;
 }
 
-// Calcula tempo restante até próxima abertura
+// Calcula tempo restante até próxima abertura (cooldown global)
 function calcularTempoRestante(cartaId) {
-  const timestamp = cartasTaroTimestamps[cartaId];
-  if (!timestamp) return null;
+  // Se nunca abriu nenhuma carta, não tem tempo restante
+  if (!ultimaCartaAbertaTimestamp) return null;
   
   const agora = Date.now();
   const vinteQuatroHoras = 24 * 60 * 60 * 1000;
-  const tempoPassado = agora - timestamp;
+  const tempoPassado = agora - ultimaCartaAbertaTimestamp;
   const tempoRestante = vinteQuatroHoras - tempoPassado;
   
   if (tempoRestante <= 0) return null;
@@ -721,20 +719,23 @@ function criarCartasTaro() {
   const cartasIds = ['prosperidade', 'foco', 'casa', 'alivio'];
   grid.innerHTML = '';
   
+  // Verifica cooldown global (se pode abrir qualquer carta)
+  const podeAbrirQualquerCarta = podeAbrirCarta('qualquer');
+  const tempoRestanteGlobal = calcularTempoRestante('qualquer');
+  
   cartasIds.forEach(cartaId => {
     const carta = cartasTaro[cartaId];
     const foiAberta = cartasTaroEstado[cartaId];
-    const podeAbrir = podeAbrirCarta(cartaId);
-    const tempoRestante = calcularTempoRestante(cartaId);
     
-    // Se a carta foi aberta e pode ser aberta novamente, permite clicar
-    const podeClicar = (!foiAberta && podeAbrir) || (foiAberta && podeAbrir);
+    // Só pode clicar se nunca foi aberta E pode abrir qualquer carta (cooldown global)
+    const podeClicar = !foiAberta && podeAbrirQualquerCarta;
     
     const cartaHTML = `
-      <div class="taro-carta ${foiAberta && !podeAbrir ? 'bloqueada' : ''} ${foiAberta ? 'flipped' : ''}" 
+      <div class="taro-carta ${!podeClicar && !foiAberta ? 'bloqueada' : ''} ${foiAberta ? 'flipped' : ''}" 
            data-carta="${cartaId}"
-           ${podeClicar ? `onclick="abrirCartaTaroFullscreen('${cartaId}')"` : ''}
-           ${foiAberta && !podeAbrir ? 'title="Carta já usada. Aguarde 24h para usar novamente."' : ''}>
+           ${podeClicar ? `onclick="mostrarConfirmacaoAberturaCarta('${cartaId}')"` : ''}
+           ${!podeClicar && !foiAberta ? 'title="Você já abriu uma carta. Aguarde 24h para abrir outra."' : ''}
+           ${foiAberta ? 'title="Esta carta já foi aberta."' : ''}>
         <div class="taro-carta-inner">
           <!-- Verso da carta (imagem GRANDE - ANTES de abrir) -->
           <div class="taro-carta-face taro-carta-verso">
@@ -746,7 +747,12 @@ function criarCartasTaro() {
               </div>
             </div>
             <div class="taro-carta-dica">${carta.dica}</div>
-            ${!foiAberta ? '<div class="taro-carta-clique">👆 Clique para revelar</div>' : ''}
+            ${!foiAberta && podeClicar ? '<div class="taro-carta-clique">👆 Clique para revelar</div>' : ''}
+            ${!foiAberta && !podeClicar && tempoRestanteGlobal ? `
+              <div class="taro-carta-clique" style="background: rgba(138, 43, 226, 0.3); border: 1px solid rgba(138, 43, 226, 0.5); color: rgba(255, 255, 255, 0.8);">
+                ⏱️ Aguarde ${formatarTempoRestante(tempoRestanteGlobal)}
+              </div>
+            ` : ''}
           </div>
           
           <!-- Frente da carta (conteúdo - DEPOIS de abrir) -->
@@ -761,14 +767,17 @@ function criarCartasTaro() {
             </div>
             <h3 class="taro-carta-titulo">${carta.titulo}</h3>
             <p class="taro-carta-texto">${carta.texto}</p>
-            ${foiAberta && !podeAbrir ? `
+            ${foiAberta ? `
               <div class="taro-carta-usada">
-                🃏 Carta usada
-                ${tempoRestante ? `
-                  <div class="taro-carta-timer" id="timer-${cartaId}">
-                    Próxima abertura em: ${formatarTempoRestante(tempoRestante)}
-                  </div>
-                ` : ''}
+                🃏 Carta já aberta
+              </div>
+            ` : ''}
+            ${!foiAberta && !podeAbrirQualquerCarta && tempoRestanteGlobal ? `
+              <div class="taro-carta-usada" style="margin-top: 20px; background: rgba(138, 43, 226, 0.2); border: 1px solid rgba(138, 43, 226, 0.4);">
+                ⏱️ Aguarde para abrir uma nova carta
+                <div class="taro-carta-timer" id="timer-global-${cartaId}">
+                  Próxima abertura em: ${formatarTempoRestante(tempoRestanteGlobal)}
+                </div>
               </div>
             ` : ''}
           </div>
@@ -793,7 +802,7 @@ function criarCartasTaro() {
   iniciarTimerTaro();
 }
 
-// Timer para atualizar contadores de tempo restante
+// Timer para atualizar contadores de tempo restante (cooldown global)
 let timerTaroInterval = null;
 function iniciarTimerTaro() {
   // Limpa timer anterior se existir
@@ -805,17 +814,30 @@ function iniciarTimerTaro() {
   timerTaroInterval = setInterval(() => {
     const cartasIds = ['prosperidade', 'foco', 'casa', 'alivio'];
     let precisaAtualizar = false;
+    const tempoRestanteGlobal = calcularTempoRestante('qualquer');
     
     cartasIds.forEach(cartaId => {
-      const tempoRestante = calcularTempoRestante(cartaId);
-      const timerElement = document.getElementById(`timer-${cartaId}`);
+      // Atualiza timer global em cada carta (se existir)
+      const timerElement = document.getElementById(`timer-global-${cartaId}`);
       
       if (timerElement) {
-        if (tempoRestante) {
-          timerElement.textContent = `Próxima abertura em: ${formatarTempoRestante(tempoRestante)}`;
+        if (tempoRestanteGlobal) {
+          timerElement.textContent = `Próxima abertura em: ${formatarTempoRestante(tempoRestanteGlobal)}`;
           precisaAtualizar = true;
         } else {
           // Tempo expirou, recria cartas para liberar
+          precisaAtualizar = true;
+        }
+      }
+      
+      // Atualiza também o texto no verso da carta (se existir)
+      const cliqueElement = document.querySelector(`.taro-carta[data-carta="${cartaId}"] .taro-carta-clique`);
+      if (cliqueElement && !document.querySelector(`.taro-carta[data-carta="${cartaId}"]`).classList.contains('flipped')) {
+        if (tempoRestanteGlobal) {
+          cliqueElement.textContent = `⏱️ Aguarde ${formatarTempoRestante(tempoRestanteGlobal)}`;
+          precisaAtualizar = true;
+        } else {
+          // Tempo expirou, recria cartas para mostrar "Clique para revelar"
           precisaAtualizar = true;
         }
       }
@@ -829,6 +851,75 @@ function iniciarTimerTaro() {
 }
 
 // Abre carta de tarô com animação flip
+// Função para mostrar modal de confirmação antes de abrir carta
+function mostrarConfirmacaoAberturaCarta(cartaId) {
+  const cartaElement = document.querySelector(`.taro-carta[data-carta="${cartaId}"]`);
+  if (!cartaElement) return;
+  
+  // Verifica se pode abrir
+  if (!podeAbrirCarta(cartaId)) {
+    return;
+  }
+  
+  // Verifica se já foi aberta
+  if (cartasTaroEstado[cartaId]) {
+    return;
+  }
+  
+  // Armazena qual carta está aguardando confirmação
+  cartaAguardandoConfirmacao = cartaId;
+  
+  // Obtém informações da carta
+  const carta = cartasTaro[cartaId];
+  if (!carta) return;
+  
+  // Atualiza o texto do modal com o nome da carta
+  const confirmacaoTexto = document.getElementById('taro-confirmacao-texto');
+  if (confirmacaoTexto) {
+    confirmacaoTexto.innerHTML = `
+      Você tem certeza que quer abrir a <strong>${carta.titulo}</strong>?
+      <br><br>
+      Quando você abrir essa carta, ela intervém no seu destino.
+      <br><br>
+      Você só pode abrir uma carta a cada 24 horas.
+      <br><br>
+      <strong>Abra com sabedoria e coração. ✨</strong>
+    `;
+  }
+  
+  // Mostra o modal de confirmação
+  const modal = document.getElementById('taro-confirmacao-modal');
+  if (modal) {
+    modal.classList.add('ativo');
+  }
+}
+
+// Função para cancelar abertura da carta
+function cancelarAberturaCarta() {
+  cartaAguardandoConfirmacao = null;
+  const modal = document.getElementById('taro-confirmacao-modal');
+  if (modal) {
+    modal.classList.remove('ativo');
+  }
+}
+
+// Função para confirmar e abrir a carta
+function confirmarAberturaCarta() {
+  if (!cartaAguardandoConfirmacao) return;
+  
+  const cartaId = cartaAguardandoConfirmacao;
+  cartaAguardandoConfirmacao = null;
+  
+  // Fecha o modal
+  const modal = document.getElementById('taro-confirmacao-modal');
+  if (modal) {
+    modal.classList.remove('ativo');
+  }
+  
+  // Abre a carta
+  abrirCartaTaroFullscreen(cartaId);
+}
+
 function abrirCartaTaroFullscreen(cartaId) {
   const cartaElement = document.querySelector(`.taro-carta[data-carta="${cartaId}"]`);
   if (!cartaElement) return;
@@ -846,9 +937,9 @@ function abrirCartaTaroFullscreen(cartaId) {
   // Adiciona classe para flip
   cartaElement.classList.add('flipped');
   
-  // Marca como aberta e salva timestamp
+  // Marca como aberta e salva timestamp global (cooldown de 24h para qualquer carta)
   cartasTaroEstado[cartaId] = true;
-  cartasTaroTimestamps[cartaId] = Date.now();
+  ultimaCartaAbertaTimestamp = Date.now();
   
   // Salva estado
   salvarEstado();
@@ -910,8 +1001,17 @@ function mostrarModal(presenteId) {
   
   // Se for o jantar, mostra opções interativas
   if (presenteId === 'jantar') {
+    // Conta quantas opções estão disponíveis
+    const opcoesDisponiveis = Object.values(opcoesJantarEscolhidas).filter(escolhida => !escolhida).length;
+    const totalOpcoes = Object.keys(opcoesJantarEscolhidas).length;
+    
     conteudoHTML += `
       <div style="text-align: left; font-size: 18px; line-height: 1.8; background: rgba(255, 255, 255, 0.05); padding: 25px; border-radius: 15px; margin: 20px 0;">
+        <div data-contador-pratos style="text-align: center; margin-bottom: 20px; padding: 12px; background: rgba(212, 175, 55, 0.15); border-radius: 12px; border: 1px solid rgba(212, 175, 55, 0.3);">
+          <p style="margin: 0; font-size: 16px; color: rgba(255, 255, 255, 0.9);">
+            <strong style="color: #d4af37;">🍽️ Pratos disponíveis: ${opcoesDisponiveis}/${totalOpcoes}</strong>
+          </p>
+        </div>
         <p>Esse aqui é um vale jantar.</p>
         <p>Mas calma… não precisa decidir nada agora 😌</p>
         <br>
@@ -1011,9 +1111,12 @@ function mostrarModal(presenteId) {
   // Verifica se o presente já foi usado
   const jaUsado = presentesEstado[presenteId];
   
+  // Para o jantar, só mostra botão "usar presente" se NÃO for jantar (jantar não tem esse botão)
+  const mostrarBotaoUsar = presenteId !== 'jantar' && !jaUsado;
+  
   conteudoHTML += `
     <div style="text-align: center; margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-      ${!jaUsado ? `
+      ${mostrarBotaoUsar ? `
         <button onclick="usarPresente('${presenteId}')" class="btn-modal-usar" style="
           padding: 12px 30px;
           border: none;
@@ -1221,13 +1324,37 @@ function carregarEstadoSalvo() {
     }
   }
   
-  // Carrega timestamps das cartas de tarô
-  const cartasTaroTimestampsSalvos = localStorage.getItem('cartasTaroTimestamps');
-  if (cartasTaroTimestampsSalvos) {
+  // Carrega timestamp da última carta aberta (cooldown global)
+  const ultimaCartaAbertaTimestampSalvo = localStorage.getItem('ultimaCartaAbertaTimestamp');
+  if (ultimaCartaAbertaTimestampSalvo) {
     try {
-      cartasTaroTimestamps = JSON.parse(cartasTaroTimestampsSalvos);
+      ultimaCartaAbertaTimestamp = parseInt(ultimaCartaAbertaTimestampSalvo);
+      // Se não é um número válido, limpa
+      if (isNaN(ultimaCartaAbertaTimestamp)) {
+        ultimaCartaAbertaTimestamp = null;
+      }
     } catch (e) {
-      console.log('Erro ao carregar timestamps das cartas de tarô');
+      console.log('Erro ao carregar timestamp da última carta aberta');
+      ultimaCartaAbertaTimestamp = null;
+    }
+  }
+  
+  // Migração: Se existir o formato antigo (objeto), converte para o novo formato (timestamp único)
+  const cartasTaroTimestampsSalvos = localStorage.getItem('cartasTaroTimestamps');
+  if (cartasTaroTimestampsSalvos && !ultimaCartaAbertaTimestamp) {
+    try {
+      const timestampsAntigos = JSON.parse(cartasTaroTimestampsSalvos);
+      // Pega o timestamp mais recente de todas as cartas
+      const valores = Object.values(timestampsAntigos).filter(v => v !== null);
+      if (valores.length > 0) {
+        ultimaCartaAbertaTimestamp = Math.max(...valores);
+        // Salva no novo formato
+        localStorage.setItem('ultimaCartaAbertaTimestamp', ultimaCartaAbertaTimestamp.toString());
+        // Remove o formato antigo
+        localStorage.removeItem('cartasTaroTimestamps');
+      }
+    } catch (e) {
+      console.log('Erro ao migrar timestamps antigos das cartas de tarô');
     }
   }
   
@@ -1522,10 +1649,27 @@ function confirmarEscolhaJantar(opcao) {
   // Marca como escolhida
   opcoesJantarEscolhidas[opcao] = true;
   
-  // Salva no localStorage
-  localStorage.setItem('opcoesJantarEscolhidas', JSON.stringify(opcoesJantarEscolhidas));
+  // Verifica se todas as opções foram escolhidas
+  const todasEscolhidas = Object.values(opcoesJantarEscolhidas).every(escolhida => escolhida === true);
   
-  // Atualiza visual no modal
+  // Se todas foram escolhidas, marca o presente como usado
+  if (todasEscolhidas) {
+    presentesEstado.jantar = true;
+    // Atualiza visual do presente (fica cinza)
+    const giftBox = document.getElementById('jantar');
+    if (giftBox) {
+      giftBox.classList.add('usado');
+      const status = giftBox.querySelector('.gift-status');
+      if (status) {
+        status.textContent = '🎁 Presente usado';
+      }
+    }
+  }
+  
+  // Salva no localStorage
+  salvarEstado();
+  
+  // Atualiza visual no modal (opção marcada)
   const opcoes = document.querySelectorAll('.opcao-jantar');
   const opcoesArray = ['japonesa', 'burger', 'italiana', 'mexicana', 'rodizio', 'surpresa'];
   const indice = opcoesArray.indexOf(opcao);
@@ -1549,11 +1693,32 @@ function confirmarEscolhaJantar(opcao) {
     }, 500);
   }
   
+  // Atualiza contador de pratos disponíveis
+  atualizarContadorPratos();
+  
   // Mostra popup transparente de mensagem disparada
   mostrarPopupMensagemDisparada(() => {
     // Depois mostra popup de sucesso
     mostrarPopupSucesso(opcao);
   });
+}
+
+// Função para atualizar contador de pratos disponíveis
+function atualizarContadorPratos() {
+  const opcoesDisponiveis = Object.values(opcoesJantarEscolhidas).filter(escolhida => !escolhida).length;
+  const totalOpcoes = Object.keys(opcoesJantarEscolhidas).length;
+  
+  // Procura o elemento do contador no modal
+  const modalBody = document.getElementById('modal-body');
+  if (!modalBody) return;
+  
+  // Procura pelo contador (se existir)
+  let contadorElement = modalBody.querySelector('[data-contador-pratos]');
+  
+  if (contadorElement) {
+    // Atualiza o texto do contador
+    contadorElement.innerHTML = `<strong style="color: #d4af37;">🍽️ Pratos disponíveis: ${opcoesDisponiveis}/${totalOpcoes}</strong>`;
+  }
 }
 
 // Mostra popup transparente avisando que mensagem foi disparada
@@ -1670,7 +1835,18 @@ window.onload = function() {
 function atualizarVisual() {
   Object.keys(presentesEstado).forEach(presenteId => {
     const foiRaspado = raspadinhaEstado[presenteId];
-    const foiUsado = presentesEstado[presenteId];
+    let foiUsado = presentesEstado[presenteId];
+    
+    // Para o jantar, verifica se todas as opções foram escolhidas
+    if (presenteId === 'jantar') {
+      const todasEscolhidas = Object.values(opcoesJantarEscolhidas).every(escolhida => escolhida === true);
+      foiUsado = todasEscolhidas;
+      // Atualiza o estado se todas foram escolhidas
+      if (todasEscolhidas && !presentesEstado.jantar) {
+        presentesEstado.jantar = true;
+        salvarEstado();
+      }
+    }
     
     if (foiRaspado) {
       const giftBox = document.getElementById(presenteId);
@@ -1713,7 +1889,14 @@ function salvarEstado() {
   localStorage.setItem('raspadinhaEstado', JSON.stringify(raspadinhaEstado));
   localStorage.setItem('opcoesJantarEscolhidas', JSON.stringify(opcoesJantarEscolhidas));
   localStorage.setItem('cartasTaroEstado', JSON.stringify(cartasTaroEstado));
-  localStorage.setItem('cartasTaroTimestamps', JSON.stringify(cartasTaroTimestamps));
+  // Salva timestamp global da última carta aberta (cooldown de 24h para qualquer carta)
+  if (ultimaCartaAbertaTimestamp) {
+    localStorage.setItem('ultimaCartaAbertaTimestamp', ultimaCartaAbertaTimestamp.toString());
+  } else {
+    localStorage.removeItem('ultimaCartaAbertaTimestamp');
+  }
+  // Remove formato antigo se ainda existir
+  localStorage.removeItem('cartasTaroTimestamps');
 }
 
 // Função para criar gatinhos comemorativos quando resgata presente
@@ -1770,6 +1953,137 @@ document.addEventListener('DOMContentLoaded', function() {
       if (clickCount >= 5) {
         criarChuvaDeGatinhos();
         clickCount = 0;
+      }
+    });
+  }
+});
+
+// ============================================
+// GÊNIO DOS DESEJOS (SUPORTE)
+// ============================================
+
+// Função para mostrar modal do Gênio dos Desejos
+function mostrarModalGenioDesejos() {
+  const modal = document.getElementById('modal-genio-desejos');
+  if (!modal) return;
+  
+  modal.classList.add('ativo');
+  // Foca no textarea
+  setTimeout(() => {
+    const textarea = document.getElementById('mensagem-genio-desejos');
+    if (textarea) {
+      textarea.focus();
+    }
+  }, 300);
+}
+
+// Função para fechar modal do Gênio dos Desejos
+function fecharModalGenioDesejos() {
+  const modal = document.getElementById('modal-genio-desejos');
+  if (!modal) return;
+  
+  modal.classList.remove('ativo');
+  // Limpa o textarea
+  const textarea = document.getElementById('mensagem-genio-desejos');
+  if (textarea) {
+    textarea.value = '';
+  }
+}
+
+// Função para enviar mensagem do Gênio dos Desejos
+function enviarMensagemGenioDesejos(event) {
+  if (event) {
+    event.preventDefault();
+  }
+  
+  const textarea = document.getElementById('mensagem-genio-desejos');
+  if (!textarea) return;
+  
+  const mensagem = textarea.value.trim();
+  
+  if (!mensagem) {
+    // Mostra feedback visual se estiver vazio
+    textarea.style.borderColor = 'rgba(255, 0, 0, 0.6)';
+    setTimeout(() => {
+      textarea.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+    }, 1000);
+    return;
+  }
+  
+  // Aqui você pode implementar o envio real quando tiver backend
+  // Por enquanto, vamos apenas mostrar uma mensagem de sucesso
+  
+  // Mostra popup de sucesso
+  mostrarPopupGenioSucesso(mensagem);
+  
+  // Limpa o textarea
+  textarea.value = '';
+  
+  // Fecha o modal após um delay
+  setTimeout(() => {
+    fecharModalGenioDesejos();
+  }, 500);
+}
+
+// Função para mostrar popup de sucesso do Gênio
+function mostrarPopupGenioSucesso(mensagem) {
+  const popup = document.createElement('div');
+  popup.id = 'popup-genio-sucesso';
+  popup.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 30000;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.95) 0%, rgba(184, 134, 11, 0.95) 100%);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px 40px;
+    box-shadow: 
+      0 20px 60px rgba(0, 0, 0, 0.6),
+      0 0 40px rgba(212, 175, 55, 0.4);
+    text-align: center;
+    animation: fadeInUp 0.4s ease-out;
+    max-width: 400px;
+    width: 90%;
+  `;
+  
+  popup.innerHTML = `
+    <div style="font-size: 60px; margin-bottom: 15px; animation: pulse 1s ease-in-out;">✨</div>
+    <h3 style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 15px; font-family: 'Dancing Script', cursive; text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);">
+      Desejo Enviado!
+    </h3>
+    <p style="font-size: 16px; color: white; line-height: 1.6; text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);">
+      Sua sugestão foi recebida! Obrigado por ajudar a tornar esta experiência ainda melhor! 💙
+    </p>
+  `;
+  
+  document.body.appendChild(popup);
+  
+  // Remove o popup após 3 segundos
+  setTimeout(() => {
+    popup.style.animation = 'fadeOut 0.3s ease-out';
+    setTimeout(() => {
+      if (popup.parentNode) {
+        popup.parentNode.removeChild(popup);
+      }
+    }, 300);
+  }, 3000);
+}
+
+// Adiciona listener ao formulário quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+  const formGenio = document.getElementById('form-genio-desejos');
+  if (formGenio) {
+    formGenio.addEventListener('submit', enviarMensagemGenioDesejos);
+  }
+  
+  // Fecha modal ao clicar fora dele
+  const modalGenio = document.getElementById('modal-genio-desejos');
+  if (modalGenio) {
+    modalGenio.addEventListener('click', function(event) {
+      if (event.target === modalGenio) {
+        fecharModalGenioDesejos();
       }
     });
   }

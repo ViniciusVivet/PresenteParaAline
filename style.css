@@ -2535,6 +2535,147 @@ button::before, .btn-enter::before {
   filter: grayscale(50%);
 }
 
+/* Modal de confirmação para abrir carta */
+.taro-confirmacao-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  z-index: 20000;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.taro-confirmacao-modal.ativo {
+  display: flex;
+}
+
+.taro-confirmacao-content {
+  background: linear-gradient(135deg, rgba(15, 12, 41, 0.95) 0%, rgba(48, 43, 99, 0.95) 50%, rgba(36, 36, 62, 0.95) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    inset 0 0 30px rgba(255, 255, 255, 0.05),
+    0 0 40px rgba(138, 43, 226, 0.3);
+  position: relative;
+  animation: modalSlideIn 0.4s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.taro-confirmacao-emoji {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.6));
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.taro-confirmacao-titulo {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 25px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 15px rgba(138, 43, 226, 0.5);
+  font-family: 'Dancing Script', cursive;
+}
+
+.taro-confirmacao-texto {
+  font-size: 18px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.taro-confirmacao-texto strong {
+  color: #d4af37;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.taro-confirmacao-botoes {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.taro-confirmacao-btn {
+  padding: 15px 35px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  min-width: 140px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.taro-confirmacao-cancelar {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.taro-confirmacao-cancelar:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.taro-confirmacao-confirmar {
+  background: linear-gradient(135deg, #8b5a9f 0%, #c77dff 50%, #8b5a9f 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(199, 125, 255, 0.4);
+}
+
+.taro-confirmacao-confirmar:hover {
+  background: linear-gradient(135deg, #9b6aaf 0%, #d78dff 50%, #9b6aaf 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 25px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(199, 125, 255, 0.6);
+}
+
+.taro-confirmacao-confirmar:active {
+  transform: translateY(0);
+}
+
 /* Responsivo - Mobile */
 @media (max-width: 768px) {
   .taro-container {
@@ -2593,5 +2734,337 @@ button::before, .btn-enter::before {
   
   .taro-carta-texto {
     font-size: 15px;
+  }
+  
+  .taro-confirmacao-content {
+    padding: 30px 20px;
+    max-width: 90%;
+  }
+  
+  .taro-confirmacao-emoji {
+    font-size: 60px;
+    margin-bottom: 15px;
+  }
+  
+  .taro-confirmacao-titulo {
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  
+  .taro-confirmacao-texto {
+    font-size: 16px;
+    margin-bottom: 25px;
+  }
+  
+  .taro-confirmacao-botoes {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .taro-confirmacao-btn {
+    width: 100%;
+    padding: 14px 30px;
+    font-size: 16px;
+    min-width: auto;
+  }
+}
+
+/* ============================================
+   GÊNIO DOS DESEJOS (SUPORTE)
+   ============================================ */
+
+/* Botão Gênio dos Desejos */
+.genio-desejos-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.9) 0%, rgba(184, 134, 11, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(212, 175, 55, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Poppins', sans-serif;
+  z-index: 1000;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  animation: fadeInUp 0.8s ease-out 1s backwards;
+}
+
+.genio-desejos-btn:hover {
+  background: linear-gradient(135deg, rgba(230, 190, 65, 0.95) 0%, rgba(204, 154, 21, 0.95) 100%);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(212, 175, 55, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.genio-desejos-btn:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.genio-desejos-emoji {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.genio-desejos-btn:hover .genio-desejos-emoji {
+  transform: scale(1.2) rotate(15deg);
+}
+
+.genio-desejos-texto {
+  font-size: 15px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Gênio dos Desejos */
+.modal-genio-desejos {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  z-index: 20000;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-genio-desejos.ativo {
+  display: flex;
+}
+
+.modal-genio-content {
+  background: linear-gradient(135deg, rgba(15, 12, 41, 0.95) 0%, rgba(48, 43, 99, 0.95) 50%, rgba(36, 36, 62, 0.95) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.4);
+  border-radius: 25px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    inset 0 0 30px rgba(255, 255, 255, 0.05),
+    0 0 40px rgba(212, 175, 55, 0.3);
+  position: relative;
+  animation: modalSlideIn 0.4s ease-out;
+}
+
+.modal-genio-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.modal-genio-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg) scale(1.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.modal-genio-emoji {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6));
+}
+
+.modal-genio-titulo {
+  font-size: 36px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.5);
+  font-family: 'Dancing Script', cursive;
+}
+
+.modal-genio-intro {
+  font-size: 17px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 30px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.form-genio-desejos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mensagem-genio-desejos {
+  width: 100%;
+  padding: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  resize: vertical;
+  min-height: 150px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.mensagem-genio-desejos:focus {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.6);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.mensagem-genio-desejos::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-genio-botoes {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-genio-cancelar,
+.btn-genio-enviar {
+  padding: 15px 35px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  min-width: 140px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-genio-cancelar {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.btn-genio-cancelar:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-genio-enviar {
+  background: linear-gradient(135deg, #d4af37 0%, #b8860b 50%, #d4af37 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+.btn-genio-enviar:hover {
+  background: linear-gradient(135deg, #e4bf47 0%, #c8961b 50%, #e4bf47 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 25px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(212, 175, 55, 0.6);
+}
+
+.btn-genio-enviar:active {
+  transform: translateY(0);
+}
+
+/* Responsivo - Mobile para Gênio dos Desejos */
+@media (max-width: 768px) {
+  .genio-desejos-btn {
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  .genio-desejos-emoji {
+    font-size: 20px;
+  }
+  
+  .genio-desejos-texto {
+    font-size: 13px;
+  }
+  
+  .modal-genio-content {
+    padding: 30px 20px;
+    max-width: 95%;
+  }
+  
+  .modal-genio-emoji {
+    font-size: 60px;
+    margin-bottom: 15px;
+  }
+  
+  .modal-genio-titulo {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+  
+  .modal-genio-intro {
+    font-size: 15px;
+    margin-bottom: 25px;
+  }
+  
+  .mensagem-genio-desejos {
+    padding: 15px;
+    font-size: 15px;
+    min-height: 120px;
+  }
+  
+  .form-genio-botoes {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .btn-genio-cancelar,
+  .btn-genio-enviar {
+    width: 100%;
+    padding: 14px 30px;
+    font-size: 16px;
+    min-width: auto;
   }
 }

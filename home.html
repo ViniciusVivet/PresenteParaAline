@@ -131,6 +131,45 @@
     </div>
   </div>
 
+  <!-- Botão Gênio dos Desejos (Suporte) -->
+  <button class="genio-desejos-btn" onclick="mostrarModalGenioDesejos()" title="Gênio dos Desejos">
+    <span class="genio-desejos-emoji">🧞‍♂️</span>
+    <span class="genio-desejos-texto">Gênio dos Desejos</span>
+  </button>
+
+  <!-- Modal Gênio dos Desejos -->
+  <div id="modal-genio-desejos" class="modal-genio-desejos">
+    <div class="modal-genio-content">
+      <button class="modal-genio-close" onclick="fecharModalGenioDesejos()" title="Fechar">
+        <span>&times;</span>
+      </button>
+      <div class="modal-genio-emoji">🧞‍♂️</div>
+      <h2 class="modal-genio-titulo">Gênio dos Desejos</h2>
+      <p class="modal-genio-intro">
+        Aqui você pode enviar sugestões de novas funcionalidades ou correções para tornar esta experiência ainda melhor! ✨
+        <br><br>
+        Sua opinião é muito importante para mim. 💙
+      </p>
+      <form id="form-genio-desejos" class="form-genio-desejos">
+        <textarea 
+          id="mensagem-genio-desejos" 
+          class="mensagem-genio-desejos" 
+          placeholder="Digite aqui sua sugestão ou correção..."
+          rows="6"
+          required
+        ></textarea>
+        <div class="form-genio-botoes">
+          <button type="button" class="btn-genio-cancelar" onclick="fecharModalGenioDesejos()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-genio-enviar">
+            Enviar Desejo ✨
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal para mostrar o presente resgatado -->
   <div id="modal" class="modal">
     <div class="modal-content">
@@ -154,6 +193,29 @@
       </div>
       <div class="taro-grid" id="taro-grid">
         <!-- Cartas serão inseridas aqui via JavaScript -->
+      </div>
+    </div>
+    
+    <!-- Modal de confirmação para abrir carta -->
+    <div id="taro-confirmacao-modal" class="taro-confirmacao-modal">
+      <div class="taro-confirmacao-content">
+        <div class="taro-confirmacao-emoji">🔮</div>
+        <h2 class="taro-confirmacao-titulo">Você tem certeza?</h2>
+        <p class="taro-confirmacao-texto" id="taro-confirmacao-texto">
+          Quando você abrir essa carta, ela intervém no seu destino.
+          <br><br>
+          Você só pode abrir uma carta a cada 24 horas.
+          <br><br>
+          <strong>Abra com sabedoria e coração. ✨</strong>
+        </p>
+        <div class="taro-confirmacao-botoes">
+          <button class="taro-confirmacao-btn taro-confirmacao-cancelar" onclick="cancelarAberturaCarta()">
+            Voltar
+          </button>
+          <button class="taro-confirmacao-btn taro-confirmacao-confirmar" onclick="confirmarAberturaCarta()">
+            Abrir Carta
+          </button>
+        </div>
       </div>
     </div>
   </div>
