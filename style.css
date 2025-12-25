@@ -823,50 +823,28 @@ button::before, .btn-enter::before {
   z-index: 2;
 }
 
-.card {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 35px 25px;
-  border-radius: 25px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  backdrop-filter: blur(15px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  min-height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* Presentinho - Caixinha de presente natalina em 3D */
+.gift-box {
   position: relative;
-  overflow: hidden;
-  animation: cardFadeIn 0.6s ease-out backwards;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3),
-              inset 0 0 30px rgba(220, 20, 60, 0.1);
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 200px;
+  margin: 0 auto;
+  cursor: pointer;
+  animation: giftFadeIn 0.6s ease-out backwards;
+  perspective: 1200px;
+  perspective-origin: center center;
+  padding-top: 20px; /* Espaço para o laço */
+  transform-style: preserve-3d;
 }
 
-/* Decorações natalinas sutis nos cards */
-.card::after {
-  content: '✨';
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  opacity: 0.4;
-  animation: twinkle 2s ease-in-out infinite;
-}
+.gift-box:nth-child(1) { animation-delay: 0.1s; }
+.gift-box:nth-child(2) { animation-delay: 0.2s; }
+.gift-box:nth-child(3) { animation-delay: 0.3s; }
+.gift-box:nth-child(4) { animation-delay: 0.4s; }
+.gift-box:nth-child(5) { animation-delay: 0.5s; }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.2); }
-}
-
-.card:nth-child(1) { animation-delay: 0.1s; }
-.card:nth-child(2) { animation-delay: 0.2s; }
-.card:nth-child(3) { animation-delay: 0.3s; }
-.card:nth-child(4) { animation-delay: 0.4s; }
-.card:nth-child(5) { animation-delay: 0.5s; }
-
-@keyframes cardFadeIn {
+@keyframes giftFadeIn {
   from {
     opacity: 0;
     transform: translateY(30px) scale(0.9);
@@ -877,78 +855,429 @@ button::before, .btn-enter::before {
   }
 }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
-}
-
-.card:hover::before {
-  left: 100%;
-}
-
-.card:hover:not(.usado):not(:has(.raspadinha-overlay:hover)) {
-  transform: translateY(-15px) scale(1.08) rotate(2deg);
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
-              0 0 30px rgba(220, 38, 38, 0.4),
-              0 0 50px rgba(34, 197, 94, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Quando tem overlay, não faz hover no card */
-.card:has(.raspadinha-overlay) {
-  cursor: default;
-}
-
-.card.usado {
-  opacity: 0.7;
-  cursor: pointer;
+/* Corpo da caixa - Presente vermelho natalino em 3D */
+.gift-body {
   position: relative;
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
+  width: 100%;
+  height: 70%;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      #dc2626 0px,
+      #dc2626 8px,
+      #b91c1c 8px,
+      #b91c1c 16px
+    ),
+    linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  border-radius: 12px 12px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.6),
+    0 8px 20px rgba(0, 0, 0, 0.4),
+    inset 0 3px 10px rgba(255, 255, 255, 0.2),
+    inset 0 -3px 10px rgba(0, 0, 0, 0.4),
+    inset -8px 0 15px rgba(0, 0, 0, 0.2),
+    inset 8px 0 15px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  transform: perspective(1000px) rotateX(5deg) rotateY(-2deg);
+  transform-style: preserve-3d;
 }
 
-.card.usado:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* Status do card */
-.card-status {
-  font-size: 14px;
-  font-weight: 600;
-  margin-top: 10px;
-  color: rgba(255, 255, 255, 0.8);
-  text-align: center;
-}
-
-.card.usado .card-status {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* Overlay da raspadinha */
-.raspadinha-overlay {
+/* Padrão de estrelas no presente */
+.gift-body::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(100, 100, 100, 0.9) 0%, rgba(80, 80, 80, 0.9) 100%);
-  border-radius: 25px;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.15) 2px, transparent 2px),
+    radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.15) 2px, transparent 2px),
+    radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.1) 1.5px, transparent 1.5px);
+  background-size: 40px 40px, 35px 35px, 30px 30px;
+  opacity: 0.6;
+  pointer-events: none;
+  border-radius: 12px 12px 8px 8px;
+}
+
+/* Face lateral direita da caixa (profundidade 3D) */
+.gift-body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 8px;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(185, 28, 28, 0.8) 0%,
+    rgba(153, 27, 27, 0.9) 100%);
+  transform: perspective(1000px) rotateY(45deg);
+  transform-origin: left center;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 
+    inset -2px 0 5px rgba(0, 0, 0, 0.3),
+    2px 0 10px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Brilho pulsante */
+.gift-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+  animation: giftShine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes giftShine {
+  0%, 100% {
+    opacity: 0.2;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: rotate(180deg);
+  }
+}
+
+/* Tampa da caixa - Vermelha com padrão em 3D */
+.gift-lid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      #b91c1c 0px,
+      #b91c1c 8px,
+      #991b1b 8px,
+      #991b1b 16px
+    ),
+    linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  border-radius: 12px 12px 4px 4px;
+  box-shadow: 
+    0 -5px 20px rgba(0, 0, 0, 0.5),
+    0 -2px 10px rgba(0, 0, 0, 0.3),
+    inset 0 3px 8px rgba(255, 255, 255, 0.25),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.4),
+    inset -8px 0 15px rgba(0, 0, 0, 0.2),
+    inset 8px 0 15px rgba(255, 255, 255, 0.15);
+  transform-origin: bottom center;
+  transform: perspective(1000px) rotateX(5deg) rotateY(-2deg);
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-bottom: none;
+  transform-style: preserve-3d;
+}
+
+/* Padrão na tampa também */
+.gift-lid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.12) 1.5px, transparent 1.5px);
+  background-size: 35px 35px;
+  opacity: 0.5;
+  pointer-events: none;
+  border-radius: 12px 12px 4px 4px;
+}
+
+/* Face lateral direita da tampa (profundidade 3D) */
+.gift-lid::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 8px;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(153, 27, 27, 0.8) 0%,
+    rgba(127, 29, 29, 0.9) 100%);
+  transform: perspective(1000px) rotateY(45deg);
+  transform-origin: left center;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 
+    inset -2px 0 5px rgba(0, 0, 0, 0.3),
+    2px 0 10px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Laço dourado/vermelho */
+.gift-bow {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 36px;
+  z-index: 4;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+  pointer-events: none;
+  text-shadow: 
+    0 0 8px rgba(255, 215, 0, 0.6),
+    0 0 12px rgba(255, 215, 0, 0.4);
+  animation: bowShine 2s ease-in-out infinite;
+}
+
+@keyframes bowShine {
+  0%, 100% {
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+    text-shadow: 
+      0 0 8px rgba(255, 215, 0, 0.6),
+      0 0 12px rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+    text-shadow: 
+      0 0 12px rgba(255, 215, 0, 0.9),
+      0 0 18px rgba(255, 215, 0, 0.6);
+  }
+}
+
+/* Emoji do presente */
+.gift-emoji {
+  font-size: 48px;
+  margin-bottom: 8px;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+  z-index: 1;
+}
+
+/* Título (escondido antes de abrir) */
+.gift-titulo {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.5s ease 0.4s;
+  z-index: 1;
+  text-align: center;
+  padding: 0 5px;
+}
+
+/* Status */
+.gift-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  margin-top: 5px;
+  z-index: 1;
+}
+
+/* Hover - presente fechado */
+.gift-box:hover:not(.aberto):not(.usado):not(:has(.raspadinha-overlay:hover)) .gift-body {
+  transform: perspective(1000px) rotateX(8deg) rotateY(-3deg) translateY(-8px) scale(1.05);
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(220, 38, 38, 0.6),
+    inset 0 3px 12px rgba(255, 255, 255, 0.3),
+    inset 0 -3px 12px rgba(0, 0, 0, 0.5),
+    inset -10px 0 20px rgba(0, 0, 0, 0.3),
+    inset 10px 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.gift-box:hover:not(.aberto):not(.usado):not(:has(.raspadinha-overlay:hover)) .gift-lid {
+  transform: perspective(1000px) rotateX(8deg) rotateY(-3deg) translateY(-3px);
+  box-shadow: 
+    0 -8px 25px rgba(0, 0, 0, 0.6),
+    0 -3px 15px rgba(0, 0, 0, 0.4),
+    inset 0 3px 10px rgba(255, 255, 255, 0.3),
+    inset -10px 0 20px rgba(0, 0, 0, 0.3),
+    inset 10px 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.gift-box:hover:not(.aberto):not(.usado):not(:has(.raspadinha-overlay:hover)) .gift-bow {
+  transform: translateX(-50%) scale(1.2) rotate(8deg);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.6));
+}
+
+.gift-box:hover:not(.aberto):not(.usado):not(:has(.raspadinha-overlay:hover)) .gift-emoji {
+  transform: scale(1.15);
+}
+
+/* Presente aberto - Visual de caixa aberta em 3D */
+.gift-box.aberto .gift-body {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-1deg);
+}
+
+.gift-box.aberto .gift-lid {
+  transform: perspective(1000px) rotateX(-140deg) rotateY(-2deg) translateY(-20px) translateZ(15px);
+  opacity: 0.85;
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
+  box-shadow: 
+    0 -8px 30px rgba(0, 0, 0, 0.6),
+    0 -3px 15px rgba(0, 0, 0, 0.4),
+    inset 0 3px 8px rgba(255, 255, 255, 0.2),
+    inset -10px 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.gift-box.aberto .gift-bow {
+  transform: translateX(-50%) scale(0) rotate(180deg);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.gift-box.aberto .gift-titulo {
+  display: block !important;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s ease 0.4s;
+}
+
+/* Presente aberto - Interior visível */
+.gift-box.aberto .gift-body {
+  background: 
+    linear-gradient(to bottom, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(220, 38, 38, 0.8) 0px,
+      rgba(220, 38, 38, 0.8) 8px,
+      rgba(185, 28, 28, 0.8) 8px,
+      rgba(185, 28, 28, 0.8) 16px
+    );
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.5),
+    inset 0 0 30px rgba(0, 0, 0, 0.2),
+    inset 0 2px 10px rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+  transition: all 0.5s ease;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+/* Interior da caixa aberta - mostra "fundo" */
+.gift-box.aberto .gift-body::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.15) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: 0 0 4px 4px;
+}
+
+.gift-box.aberto .gift-emoji {
+  transform: scale(1.15);
+  transition: transform 0.5s ease;
+}
+
+/* Presente usado - Mantém visual de aberto mas mais opaco */
+.gift-box.usado {
+  opacity: 0.75;
+}
+
+.gift-box.usado .gift-body {
+  background: 
+    linear-gradient(to bottom, rgba(100, 100, 100, 0.6) 0%, rgba(80, 80, 80, 0.6) 100%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(120, 120, 120, 0.5) 0px,
+      rgba(120, 120, 120, 0.5) 8px,
+      rgba(100, 100, 100, 0.5) 8px,
+      rgba(100, 100, 100, 0.5) 16px
+    );
+  filter: grayscale(40%);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.gift-box.usado .gift-lid {
+  background: 
+    repeating-linear-gradient(
+      90deg,
+      rgba(100, 100, 100, 0.6) 0px,
+      rgba(100, 100, 100, 0.6) 8px,
+      rgba(80, 80, 80, 0.6) 8px,
+      rgba(80, 80, 80, 0.6) 16px
+    );
+  filter: grayscale(40%);
+}
+
+.gift-box.usado .gift-status {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Quando tem overlay, não faz hover */
+.gift-box:has(.raspadinha-overlay) {
+  cursor: default;
+}
+
+/* Compatibilidade com classes antigas (para JS) */
+.card {
+  /* Mantém compatibilidade */
+}
+
+.card-emoji {
+  /* Mantém compatibilidade */
+}
+
+.card-titulo {
+  /* Mantém compatibilidade */
+}
+
+.card-status {
+  /* Mantém compatibilidade */
+}
+
+/* Overlay da raspadinha - Camada prateada que permite ver o presente vermelho por baixo */
+.raspadinha-overlay {
+  position: absolute;
+  top: -30px;
+  left: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 50px);
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.6) 0px,
+      rgba(255, 255, 255, 0.6) 6px,
+      rgba(240, 240, 240, 0.5) 6px,
+      rgba(240, 240, 240, 0.5) 12px
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(240, 240, 240, 0.3) 100%);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: grab;
-  z-index: 5;
+  z-index: 10;
   user-select: none;
   -webkit-user-select: none;
   touch-action: none;
+  box-shadow: 
+    inset 0 0 10px rgba(255, 255, 255, 0.4),
+    0 0 0 2px rgba(255, 255, 255, 0.2),
+    0 15px 40px rgba(0, 0, 0, 0.6),
+    inset -8px 0 15px rgba(0, 0, 0, 0.2),
+    inset 8px 0 15px rgba(255, 255, 255, 0.1);
+  transform: perspective(1000px) rotateX(5deg) rotateY(-2deg);
+  transform-style: preserve-3d;
+  /* Área ampliada para cobrir todo o presente, incluindo laço e bordas */
+  pointer-events: auto;
+  /* O presente vermelho fica visível por baixo através da camada prateada semi-transparente */
 }
 
 .raspadinha-overlay:active {
@@ -974,6 +1303,11 @@ button::before, .btn-enter::before {
     .raspadinha-overlay {
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
+      top: -35px;
+      left: -8px;
+      width: calc(100% + 16px);
+      height: calc(100% + 60px);
+      /* Área ainda maior no mobile para facilitar o toque */
     }
     
     /* Área de toque maior para botões */
@@ -1453,6 +1787,32 @@ button::before, .btn-enter::before {
     padding: 20px 15px;
   }
   
+  .gift-box {
+    max-width: 160px;
+    padding-top: 18px;
+  }
+  
+  .gift-emoji {
+    font-size: 42px;
+  }
+  
+  .gift-titulo {
+    font-size: 13px;
+  }
+  
+  .gift-bow {
+    font-size: 30px;
+    top: -12px;
+  }
+  
+  .gift-body {
+    height: 68%;
+  }
+  
+  .gift-lid {
+    height: 32%;
+  }
+  
   .card {
     min-height: 170px;
     padding: 25px 20px;
@@ -1567,6 +1927,36 @@ button::before, .btn-enter::before {
     gap: 15px;
   }
   
+  .gift-box {
+    max-width: 140px;
+    padding-top: 16px;
+  }
+  
+  .gift-emoji {
+    font-size: 38px;
+  }
+  
+  .gift-titulo {
+    font-size: 12px;
+  }
+  
+  .gift-bow {
+    font-size: 26px;
+    top: -10px;
+  }
+  
+  .gift-status {
+    font-size: 10px;
+  }
+  
+  .gift-body {
+    height: 66%;
+  }
+  
+  .gift-lid {
+    height: 34%;
+  }
+  
   .card {
     min-height: 150px;
     padding: 20px 15px;
@@ -1613,6 +2003,28 @@ button::before, .btn-enter::before {
     padding: 15px 10px;
   }
   
+  .gift-box {
+    max-width: 180px;
+    padding-top: 18px;
+  }
+  
+  .gift-emoji {
+    font-size: 44px;
+  }
+  
+  .gift-bow {
+    font-size: 32px;
+    top: -14px;
+  }
+  
+  .gift-body {
+    height: 69%;
+  }
+  
+  .gift-lid {
+    height: 31%;
+  }
+  
   .card {
     min-height: 140px;
     padding: 18px 12px;
@@ -1644,5 +2056,542 @@ button::before, .btn-enter::before {
     left: 10px;
     padding: 8px 12px;
     font-size: 12px;
+  }
+}
+
+/* Estilos para cartas de tarô */
+.carta-taro.fechada:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(138, 43, 226, 0.4),
+              0 0 20px rgba(138, 43, 226, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.carta-taro.fechada:active {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.carta-taro.aberta {
+  animation: cartaAbrirTaro 0.5s ease-out;
+}
+
+@keyframes cartaAbrirTaro {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) rotateY(-10deg);
+  }
+  50% {
+    transform: scale(1.05) rotateY(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+/* Responsivo para cartas de tarô */
+@media (max-width: 768px) {
+  .taro-cartas-container {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  .carta-taro {
+    min-height: 250px !important;
+    padding: 20px !important;
+  }
+}
+
+/* ============================================
+   TELA FULLSCREEN DO TARÔ
+   ============================================ */
+
+.taro-fullscreen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* 
+  OPÇÕES DE FUNDO MODERNO PARA TARÔ:
+  
+  OPÇÃO 1: Gradiente místico roxo/azul com estrelas (ATUAL - APLICADA)
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 25%, #24243e 50%, #1a1a2e 75%, #0f0c29 100%);
+  
+  OPÇÃO 2: Gradiente roxo suave com brilho
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  
+  OPÇÃO 3: Gradiente escuro com toques dourados
+  background: linear-gradient(135deg, #1e1e2e 0%, #2d1b4e 25%, #1a1a2e 50%, #2d1b4e 75%, #1e1e2e 100%);
+  
+  OPÇÃO 4: Gradiente azul profundo místico
+  background: linear-gradient(135deg, #0a0e27 0%, #1a237e 25%, #283593 50%, #1a237e 75%, #0a0e27 100%);
+  
+  OPÇÃO 5: Gradiente roxo/rosa suave
+  background: linear-gradient(135deg, #2d1b4e 0%, #8b5a9f 25%, #c77dff 50%, #8b5a9f 75%, #2d1b4e 100%);
+  
+  OPÇÃO 6: Fundo escuro com padrão de estrelas (mais sutil)
+  background: #0f0c29;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0);
+  background-size: 50px 50px;
+  */
+  
+  /* OPÇÃO 1: Gradiente místico roxo/azul (ATUAL - APLICADA) */
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 25%, #24243e 50%, #1a1a2e 75%, #0f0c29 100%);
+  background-size: 400% 400%;
+  animation: fadeIn 0.3s ease-out, gradientShiftTaro 20s ease infinite;
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  
+  /* Efeito de estrelas no fundo */
+  position: relative;
+}
+
+.taro-fullscreen::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.05) 1px, transparent 1px);
+  background-size: 200px 200px, 150px 150px, 100px 100px;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+  animation: starTwinkle 3s ease-in-out infinite;
+}
+
+@keyframes gradientShiftTaro {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Garante que o conteúdo fique acima das estrelas */
+.taro-container {
+  position: relative;
+  z-index: 1;
+}
+
+.taro-fullscreen.ativo {
+  display: block;
+}
+
+.taro-container {
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  /* Garante que o conteúdo pode ser scrollado */
+}
+
+/* Botão fechar */
+.taro-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10001;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.taro-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.taro-close span {
+  line-height: 1;
+}
+
+/* Header do tarô */
+.taro-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding-top: 20px;
+}
+
+.taro-titulo {
+  font-family: 'Dancing Script', cursive;
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+  animation: fadeInDown 0.6s ease-out;
+}
+
+.taro-intro {
+  font-size: 18px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 700px;
+  margin: 0 auto;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  animation: fadeInDown 0.8s ease-out;
+}
+
+/* Grid de cartas */
+.taro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+/* Carta de tarô individual */
+.taro-carta {
+  position: relative;
+  aspect-ratio: 2/3;
+  min-height: 450px;
+  perspective: 1000px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.taro-carta:not(.bloqueada):hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+.taro-carta-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.taro-carta.flipped .taro-carta-inner {
+  transform: rotateY(180deg);
+}
+
+.taro-carta-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Verso da carta (imagem) */
+.taro-carta-verso {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #533483 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  transform: rotateY(0deg);
+}
+
+.taro-carta-imagem-container {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  position: relative;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  overflow: visible;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}
+
+.taro-carta-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: block;
+  transition: transform 0.3s ease;
+  /* Mostra a imagem inteira sem cortar */
+}
+
+.taro-carta:not(.flipped):not(.bloqueada):hover .taro-carta-imagem {
+  transform: scale(1.03);
+}
+
+.taro-carta-imagem-container-pequeno {
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.taro-carta-imagem-pequena {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: block;
+  /* Garante que a imagem apareça mesmo após abrir */
+}
+
+.taro-carta-dica {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+  margin-top: 8px;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.taro-carta:hover .taro-carta-dica {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.taro-carta-clique {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: rgba(255, 215, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  animation: pulseClique 2s ease-in-out infinite;
+}
+
+@keyframes pulseClique {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Frente da carta (conteúdo) */
+.taro-carta-frente {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  transform: rotateY(180deg);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* A imagem vem do inline style background-image */
+}
+
+/* Imagem de fundo com blur na frente da carta */
+.taro-carta-frente::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(25px) brightness(0.25);
+  opacity: 0.8;
+  z-index: 0;
+  border-radius: 20px;
+}
+
+/* Overlay escuro sobre o blur para melhorar legibilidade */
+.taro-carta-frente::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%);
+  z-index: 0;
+  border-radius: 20px;
+}
+
+.taro-carta-frente > * {
+  position: relative;
+  z-index: 1;
+}
+
+.taro-carta-imagem-pequena {
+  width: 120px;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.taro-carta-titulo {
+  font-family: 'Dancing Script', cursive;
+  font-size: 28px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 20px;
+  text-align: center;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+}
+
+.taro-carta-texto {
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.95);
+  text-align: center;
+  white-space: pre-line;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7), 0 0 8px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(3px);
+}
+
+.taro-carta-usada {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 15px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.taro-carta-timer {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+}
+
+.taro-carta-bloqueada {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.taro-carta-bloqueada .taro-carta-verso {
+  filter: grayscale(50%);
+}
+
+/* Responsivo - Mobile */
+@media (max-width: 768px) {
+  .taro-container {
+    padding: 20px 15px;
+  }
+  
+  .taro-close {
+    top: 15px;
+    right: 15px;
+    width: 44px;
+    height: 44px;
+    font-size: 28px;
+  }
+  
+  .taro-titulo {
+    font-size: 36px;
+    margin-bottom: 15px;
+  }
+  
+  .taro-intro {
+    font-size: 16px;
+    padding: 0 10px;
+  }
+  
+  .taro-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    max-width: 100%;
+  }
+  
+  .taro-carta {
+    min-height: 550px;
+  }
+  
+  .taro-carta-imagem-container {
+    height: 75%;
+  }
+  
+  .taro-carta-dica {
+    font-size: 18px;
+    padding: 8px 15px;
+  }
+  
+  .taro-carta-clique {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
+  
+  .taro-carta-frente {
+    padding: 25px 20px;
+  }
+  
+  .taro-carta-titulo {
+    font-size: 24px;
+  }
+  
+  .taro-carta-texto {
+    font-size: 15px;
   }
 }

@@ -4,7 +4,7 @@ let presentesEstado = {
   jantar: false,
   carta: false,
   foto: false,
-  video: false
+  taro: false
 };
 
 // Estado das opções de jantar escolhidas
@@ -17,23 +17,90 @@ let opcoesJantarEscolhidas = {
   surpresa: false
 };
 
+// Estado das cartas de tarô (cada carta pode ser aberta apenas uma vez a cada 24h)
+let cartasTaroEstado = {
+  prosperidade: false,
+  foco: false,
+  casa: false,
+  alivio: false
+};
+
+// Timestamps das cartas de tarô (para controle de 24h)
+let cartasTaroTimestamps = {
+  prosperidade: null,
+  foco: null,
+  casa: null,
+  alivio: null
+};
+
+// Definições das cartas de tarô
+const cartasTaro = {
+  prosperidade: {
+    titulo: "Carta da Prosperidade 💰",
+    texto: `Quando essa carta aparece, o caminho se organiza.
+As metas se alinham, a cabeça fica mais leve e o esforço começa a dar retorno.
+
+O mês flui melhor, a cobrança pesa menos e você sente que está exatamente onde deveria estar.
+
+✨ A prosperidade não chega gritando. Ela chega confirmando.`,
+    emoji: "💰",
+    dica: "Prosperidade",
+    imagem: "assets/taro/prosperidade.jpg"
+  },
+  foco: {
+    titulo: "Carta do Foco 🎯",
+    texto: `Essa carta simboliza clareza.
+Menos ruído, menos estresse desnecessário e mais controle do que realmente importa.
+
+Ao tirar essa carta, você atravessa desafios com mais firmeza e termina o ciclo sabendo que fez o seu melhor.
+
+✨ Quem confia no próprio processo, vence antes do final.`,
+    emoji: "🎯",
+    dica: "Foco",
+    imagem: "assets/taro/foco.jpg"
+  },
+  casa: {
+    titulo: "Carta da Casa 🏡",
+    texto: `Quando essa carta se revela, o caminho do lar se move.
+A obra anda, as pessoas se alinham e tudo flui melhor do que o esperado.
+
+O que parecia lento ganha ritmo.
+O que parecia distante se aproxima.
+
+✨ O lugar certo já está te esperando.`,
+    emoji: "🏡",
+    dica: "Lar",
+    imagem: "assets/taro/casa.jpg"
+  },
+  alivio: {
+    titulo: "Carta do Alívio 🌙",
+    texto: `Essa carta aparece quando você precisa lembrar de respirar.
+
+Ela não promete menos responsabilidade — promete mais cuidado.
+Mais descanso mental, mais leveza e menos cobrança interna.
+
+✨ Nem tudo é urgência. Algumas coisas são só vida acontecendo.`,
+    emoji: "🌙",
+    dica: "Alívio",
+    imagem: "assets/taro/alivio.jpg"
+  }
+};
+
 // Conteúdo de cada presente - Linguagem carinhosa e emocional
 const conteudoPresentes = {
   massagem: {
     titulo: "💆 Vale Massagem",
-    texto: `Quando você escolher usar este presente, algo mágico vai acontecer... 🤖
+    texto: `Meu amor,
+esse é um vale massagem pra quando você quiser um momento só seu.
 
-Um robôzinho vai enviar uma mensagem automática no WhatsApp do seu namorado (sim, eu mesmo! 😄) e eu vou saber que é hora de preparar tudo com muito carinho.
+Quando você usar esse presente, vai chegar uma mensagem direto no meu WhatsApp.
+Aí eu vou saber que é hora de preparar tudo pra você.
 
-Vou preparar:
-✨ Creme relaxante
-🕯️ Velas perfumadas
-🎭 Máscara facial
-💆 Massagem completa
+Vou separar o creme, acender as velas e cuidar de você com calma e atenção.
+É pra relaxar, desligar a cabeça e se sentir cuidada.
 
-Tudo no seu tempo, no seu ritmo. Sem pressa, só cuidado e carinho. Quando você sentir que precisa de um momento só seu, de relaxamento e atenção, é só escolher usar este presente.
-
-Eu vou estar pronto para te mimar do jeito que você merece. ❤️`
+Quando você usar,
+eu vou estar pronto. 🤍`
   },
   jantar: {
     titulo: "🍝 Vale Jantar",
@@ -74,10 +141,7 @@ boa comida, companhia melhor ainda,
 risadas no meio do caminho
 
 e zero pressão pra ser algo perfeito.
-
-
-
-Só a gente. Do nosso jeito. 💛`
+`
   },
   carta: {
     titulo: "💌 Carta Secreta",
@@ -136,11 +200,16 @@ Com você, tudo faz mais sentido. 🤍`
 Cada uma dessas fotos me lembra de algum momento especial que vivemos juntos. 💖`,
     temGaleria: true // Flag para mostrar galeria
   },
-  video: {
-    titulo: "🎥 Vídeo Surpresa",
-    texto: `Um vídeo especial só para você! Uma mensagem direta do coração, porque algumas coisas são melhor ditas assim.
+  taro: {
+    titulo: "🔮 Tarô da Positividade",
+    texto: `Bem-vinda ao Tarô da Positividade! 🌙
 
-(aqui vai aparecer o vídeo quando você adicionar) 🐱`
+Aqui você encontrará 4 cartas especiais, cada uma com uma mensagem positiva e única.
+
+Cada carta pode ser revelada apenas uma vez. Escolha com o coração e deixe que a energia positiva te guie.
+
+✨ As cartas não prometem o impossível — elas apenas lembram você do que já está acontecendo.`,
+    temCartas: true
   }
 };
 
@@ -150,7 +219,7 @@ let raspadinhaEstado = {
   jantar: false,
   carta: false,
   foto: false,
-  video: false
+  taro: false
 };
 
 // Inicializa sistema de raspadinha quando página carrega
@@ -162,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Inicializa cliques nos cards (para cards usados, mostra modal novamente)
 function inicializarCliquesCards() {
-  const cards = document.querySelectorAll('.card');
+  const cards = document.querySelectorAll('.gift-box, .card');
   
   cards.forEach(card => {
     const presenteId = card.getAttribute('data-presente');
@@ -173,8 +242,8 @@ function inicializarCliquesCards() {
         return;
       }
       
-      // Se o presente já foi usado, mostra modal novamente
-      if (presentesEstado[presenteId]) {
+      // Se o presente já foi raspado (revelado), mostra modal
+      if (raspadinhaEstado[presenteId]) {
         mostrarModal(presenteId);
       }
     });
@@ -220,7 +289,7 @@ function mostrarMensagemMascoteAleatoria() {
 
 // Função para inicializar raspadinhas
 function inicializarRaspadinhas() {
-  const cards = document.querySelectorAll('.card');
+  const cards = document.querySelectorAll('.gift-box, .card');
   
   cards.forEach(card => {
     const presenteId = card.getAttribute('data-presente');
@@ -254,17 +323,24 @@ function inicializarRaspadinhas() {
       if (!isRaspando || raspadinhaEstado[presenteId]) return;
       
       const rect = overlay.getBoundingClientRect();
-      const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-      const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       
-      // Cria efeito visual de raspagem
-      criarEfeitoRaspagem(x, y, overlay);
+      // Calcula posição relativa ao overlay (mesmo se estiver nas bordas ampliadas)
+      const x = clientX - rect.left;
+      const y = clientY - rect.top;
       
-      // Calcula porcentagem raspada (simplificado)
-      porcentagemRaspada += 2;
-      
-      if (porcentagemRaspada >= 100) {
-        revelarPresente(presenteId);
+      // Verifica se está dentro da área do overlay (incluindo bordas ampliadas)
+      if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+        // Cria efeito visual de raspagem
+        criarEfeitoRaspagem(x, y, overlay);
+        
+        // Calcula porcentagem raspada (mais sensível)
+        porcentagemRaspada += 2.5;
+        
+        if (porcentagemRaspada >= 100) {
+          revelarPresente(presenteId);
+        }
       }
     }
     
@@ -281,21 +357,23 @@ function criarEfeitoRaspagem(x, y, overlay) {
     position: absolute;
     left: ${x}px;
     top: ${y}px;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     pointer-events: none;
     transform: translate(-50%, -50%);
-    z-index: 10;
+    z-index: 11;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
   `;
   overlay.appendChild(circulo);
   
   setTimeout(() => {
-    circulo.style.transition = 'opacity 0.3s';
+    circulo.style.transition = 'opacity 0.4s, transform 0.4s';
     circulo.style.opacity = '0';
-    setTimeout(() => circulo.remove(), 300);
-  }, 100);
+    circulo.style.transform = 'translate(-50%, -50%) scale(1.5)';
+    setTimeout(() => circulo.remove(), 400);
+  }, 150);
 }
 
 // Mensagens da mascote Lina Trova
@@ -304,19 +382,21 @@ const mensagensMascote = {
   jantar: "Adorei sua escolha! Vai ser um jantar especial, tenho certeza! 🍝✨",
   carta: "Essa vai ser emocionante! Palavras do coração são as melhores! 💌❤️",
   foto: "Memórias são tesouros! Essa foto vai ser especial! 📸💖",
-  video: "A última escolha! Prepare-se para algo especial! 🎥🎉"
+  taro: "Que momento especial! As cartas têm algo especial para você! 🔮✨"
 };
 
 // Revela o presente quando raspado completamente
 function revelarPresente(presenteId) {
   if (raspadinhaEstado[presenteId]) return;
   
+  // Marca como raspado (revelado), mas NÃO como usado ainda
   raspadinhaEstado[presenteId] = true;
-  presentesEstado[presenteId] = true;
+  // NÃO marca como usado - só quando confirmar no modal
   
   const overlay = document.getElementById(`overlay-${presenteId}`);
-  const card = document.getElementById(presenteId);
-  const status = card.querySelector('.card-status');
+  const giftBox = document.getElementById(presenteId);
+  const status = giftBox.querySelector('.gift-status') || giftBox.querySelector('.card-status');
+  const titulo = giftBox.querySelector('.gift-titulo') || giftBox.querySelector('.card-titulo');
   
   // Remove overlay com animação
   overlay.style.transition = 'opacity 0.5s ease-out';
@@ -325,13 +405,26 @@ function revelarPresente(presenteId) {
     overlay.style.display = 'none';
   }, 500);
   
-  // Atualiza status do card
+  // Anima abertura do presente
+  setTimeout(() => {
+    // Marca como aberto para animação
+    giftBox.classList.add('aberto');
+    
+    // Cria partículas de brilho
+    criarParticulasBrilho(giftBox);
+    
+    // Mostra título após animação
+    if (titulo) {
+      titulo.style.display = 'block';
+    }
+  }, 100);
+  
+  // Atualiza status - presente revelado mas ainda não usado
   if (status) {
-    status.textContent = '🎁 Presente usado';
+    status.textContent = '🎁 Presente revelado';
   }
   
-  // Marca card como usado
-  card.classList.add('usado');
+  // NÃO marca como usado ainda - só quando confirmar no modal
   
   // Mascote reage!
   mostrarMensagemMascote(presenteId);
@@ -341,8 +434,75 @@ function revelarPresente(presenteId) {
     mostrarModal(presenteId);
   }, 2000);
   
-  // Salva estado
+  // Salva estado (mas sem marcar como usado ainda)
   salvarEstado();
+}
+
+// Cria partículas de brilho quando presente abre
+function criarParticulasBrilho(giftBox) {
+  const particulas = ['✨', '⭐', '💫', '🌟'];
+  const rect = giftBox.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const particula = document.createElement('div');
+      particula.textContent = particulas[Math.floor(Math.random() * particulas.length)];
+      particula.style.cssText = `
+        position: fixed;
+        left: ${centerX}px;
+        top: ${centerY}px;
+        font-size: 24px;
+        pointer-events: none;
+        z-index: 10000;
+        transform: translate(-50%, -50%);
+        animation: particulaBrilho 1s ease-out forwards;
+      `;
+      
+      const angle = (Math.PI * 2 * i) / 8;
+      const distance = 60 + Math.random() * 40;
+      const finalX = centerX + Math.cos(angle) * distance;
+      const finalY = centerY + Math.sin(angle) * distance;
+      
+      document.body.appendChild(particula);
+      
+      setTimeout(() => {
+        particula.style.transition = 'all 1s ease-out';
+        particula.style.left = finalX + 'px';
+        particula.style.top = finalY + 'px';
+        particula.style.opacity = '0';
+        particula.style.transform = `translate(-50%, -50%) scale(0.5)`;
+        
+        setTimeout(() => {
+          particula.remove();
+        }, 1000);
+      }, 50);
+    }, i * 50);
+  }
+  
+  // Adiciona CSS da animação se não existir
+  if (!document.getElementById('particula-brilho-style')) {
+    const style = document.createElement('style');
+    style.id = 'particula-brilho-style';
+    style.textContent = `
+      @keyframes particulaBrilho {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0) rotate(0deg);
+        }
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
+        }
+        100% {
+          opacity: 0.8;
+          transform: translate(-50%, -50%) scale(1) rotate(360deg);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
 }
 
 // Mostra mensagem da mascote
@@ -387,6 +547,352 @@ function resgatar(presenteId) {
   if (overlay) {
     overlay.style.display = 'block';
   }
+}
+
+// Função para criar HTML das cartas de tarô
+function criarHTMLCartasTaro() {
+  const cartasIds = ['prosperidade', 'foco', 'casa', 'alivio'];
+  let html = '';
+  
+  cartasIds.forEach(cartaId => {
+    const carta = cartasTaro[cartaId];
+    const estaAberta = cartasTaroEstado[cartaId];
+    
+    if (estaAberta) {
+      // Carta já aberta - mostra conteúdo
+      html += `
+        <div class="carta-taro aberta" data-carta="${cartaId}" style="
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+          border-radius: 20px;
+          padding: 25px;
+          min-height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          cursor: default;
+          opacity: 0.8;
+        ">
+          <div style="font-size: 60px; margin-bottom: 15px;">${carta.emoji}</div>
+          <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 15px; font-family: 'Dancing Script', cursive;">${carta.titulo}</h3>
+          <p style="font-size: 15px; line-height: 1.7; white-space: pre-line; opacity: 0.9;">${carta.texto}</p>
+          <div style="margin-top: 15px; font-size: 14px; opacity: 0.7;">🃏 Carta usada</div>
+        </div>
+      `;
+    } else {
+      // Carta fechada - mostra verso
+      html += `
+        <div class="carta-taro fechada" data-carta="${cartaId}" onclick="abrirCartaTaro('${cartaId}')" style="
+          background: linear-gradient(135deg, rgba(80, 80, 120, 0.9) 0%, rgba(60, 60, 100, 0.9) 100%);
+          border-radius: 20px;
+          padding: 25px;
+          min-height: 300px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        ">
+          <div style="font-size: 80px; margin-bottom: 20px; opacity: 0.8;">🔮</div>
+          <p style="font-size: 16px; font-weight: 600; opacity: 0.9;">Toque para revelar sua carta</p>
+          <div style="position: absolute; top: 10px; right: 10px; font-size: 20px; opacity: 0.5;">🌙</div>
+        </div>
+      `;
+    }
+  });
+  
+  return html;
+}
+
+// ============================================
+// TELA FULLSCREEN DO TARÔ
+// ============================================
+
+// Verifica se pode abrir carta (24h de cooldown)
+function podeAbrirCarta(cartaId) {
+  const timestamp = cartasTaroTimestamps[cartaId];
+  if (!timestamp) return true;
+  
+  const agora = Date.now();
+  const vinteQuatroHoras = 24 * 60 * 60 * 1000; // 24h em ms
+  const tempoPassado = agora - timestamp;
+  
+  return tempoPassado >= vinteQuatroHoras;
+}
+
+// Calcula tempo restante até próxima abertura
+function calcularTempoRestante(cartaId) {
+  const timestamp = cartasTaroTimestamps[cartaId];
+  if (!timestamp) return null;
+  
+  const agora = Date.now();
+  const vinteQuatroHoras = 24 * 60 * 60 * 1000;
+  const tempoPassado = agora - timestamp;
+  const tempoRestante = vinteQuatroHoras - tempoPassado;
+  
+  if (tempoRestante <= 0) return null;
+  
+  const horas = Math.floor(tempoRestante / (60 * 60 * 1000));
+  const minutos = Math.floor((tempoRestante % (60 * 60 * 1000)) / (60 * 1000));
+  
+  return { horas, minutos };
+}
+
+// Formata tempo restante para exibição
+function formatarTempoRestante(tempo) {
+  if (!tempo) return '';
+  if (tempo.horas > 0) {
+    return `${tempo.horas}h ${tempo.minutos}m`;
+  }
+  return `${tempo.minutos}m`;
+}
+
+// Mostra tela fullscreen do tarô
+function mostrarTaroFullscreen() {
+  const taroFullscreen = document.getElementById('taro-fullscreen');
+  if (!taroFullscreen) return;
+  
+  // Primeiro cria as cartas
+  criarCartasTaro();
+  
+  // Depois mostra a tela
+  taroFullscreen.classList.add('ativo');
+  // NÃO bloqueia scroll do body - deixa o scroll livre na tela do tarô
+  
+  // Scroll automático para baixo quando abre (mostra as cartas)
+  setTimeout(() => {
+    // Rola para mostrar o grid de cartas
+    const grid = document.getElementById('taro-grid');
+    if (grid) {
+      grid.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    } else {
+      // Fallback: rola um pouco para baixo
+      taroFullscreen.scrollTo({
+        top: 300,
+        behavior: 'smooth'
+      });
+    }
+  }, 300);
+  
+  // Garante scroll após renderização completa
+  setTimeout(() => {
+    const grid = document.getElementById('taro-grid');
+    if (grid) {
+      grid.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+    }
+  }, 600);
+}
+
+// Fecha tela fullscreen do tarô
+function fecharTaroFullscreen() {
+  const taroFullscreen = document.getElementById('taro-fullscreen');
+  if (!taroFullscreen) return;
+  
+  taroFullscreen.classList.remove('ativo');
+  // Não precisa restaurar overflow do body pois não bloqueamos
+  
+  // Para o timer quando fecha
+  if (timerTaroInterval) {
+    clearInterval(timerTaroInterval);
+    timerTaroInterval = null;
+  }
+}
+
+// Cria as cartas de tarô no grid
+function criarCartasTaro() {
+  const grid = document.getElementById('taro-grid');
+  if (!grid) return;
+  
+  const cartasIds = ['prosperidade', 'foco', 'casa', 'alivio'];
+  grid.innerHTML = '';
+  
+  cartasIds.forEach(cartaId => {
+    const carta = cartasTaro[cartaId];
+    const foiAberta = cartasTaroEstado[cartaId];
+    const podeAbrir = podeAbrirCarta(cartaId);
+    const tempoRestante = calcularTempoRestante(cartaId);
+    
+    // Se a carta foi aberta e pode ser aberta novamente, permite clicar
+    const podeClicar = (!foiAberta && podeAbrir) || (foiAberta && podeAbrir);
+    
+    const cartaHTML = `
+      <div class="taro-carta ${foiAberta && !podeAbrir ? 'bloqueada' : ''} ${foiAberta ? 'flipped' : ''}" 
+           data-carta="${cartaId}"
+           ${podeClicar ? `onclick="abrirCartaTaroFullscreen('${cartaId}')"` : ''}
+           ${foiAberta && !podeAbrir ? 'title="Carta já usada. Aguarde 24h para usar novamente."' : ''}>
+        <div class="taro-carta-inner">
+          <!-- Verso da carta (imagem GRANDE - ANTES de abrir) -->
+          <div class="taro-carta-face taro-carta-verso">
+            <div class="taro-carta-imagem-container">
+              <img src="${carta.imagem}" alt="${carta.titulo}" class="taro-carta-imagem" 
+                   onerror="this.onerror=null; this.style.display='none'; const fallback = this.parentElement.querySelector('.taro-carta-emoji-fallback'); if(fallback) fallback.style.display='flex';">
+              <div class="taro-carta-emoji-fallback" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 120px; opacity: 0.8;">
+                ${carta.emoji}
+              </div>
+            </div>
+            <div class="taro-carta-dica">${carta.dica}</div>
+            ${!foiAberta ? '<div class="taro-carta-clique">👆 Clique para revelar</div>' : ''}
+          </div>
+          
+          <!-- Frente da carta (conteúdo - DEPOIS de abrir) -->
+          <div class="taro-carta-face taro-carta-frente" style="background-image: url('${carta.imagem}');">
+            <!-- Imagem menor no topo (mesma imagem do verso) -->
+            <div class="taro-carta-imagem-container-pequeno">
+              <img src="${carta.imagem}" alt="${carta.titulo}" class="taro-carta-imagem-pequena" 
+                   onerror="this.onerror=null; this.style.display='none'; const fallback = this.parentElement.querySelector('.taro-carta-emoji-fallback-pequeno'); if(fallback) fallback.style.display='flex';">
+              <div class="taro-carta-emoji-fallback-pequeno" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-size: 80px; opacity: 0.8;">
+                ${carta.emoji}
+              </div>
+            </div>
+            <h3 class="taro-carta-titulo">${carta.titulo}</h3>
+            <p class="taro-carta-texto">${carta.texto}</p>
+            ${foiAberta && !podeAbrir ? `
+              <div class="taro-carta-usada">
+                🃏 Carta usada
+                ${tempoRestante ? `
+                  <div class="taro-carta-timer" id="timer-${cartaId}">
+                    Próxima abertura em: ${formatarTempoRestante(tempoRestante)}
+                  </div>
+                ` : ''}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    
+    grid.innerHTML += cartaHTML;
+  });
+  
+  // Aplica background-image via CSS variable para o blur funcionar
+  setTimeout(() => {
+    document.querySelectorAll('.taro-carta-frente[style*="background-image"]').forEach(carta => {
+      const bgImage = carta.style.backgroundImage;
+      if (bgImage) {
+        carta.style.setProperty('--bg-image', bgImage);
+      }
+    });
+  }, 10);
+  
+  // Inicia timer para atualizar contadores
+  iniciarTimerTaro();
+}
+
+// Timer para atualizar contadores de tempo restante
+let timerTaroInterval = null;
+function iniciarTimerTaro() {
+  // Limpa timer anterior se existir
+  if (timerTaroInterval) {
+    clearInterval(timerTaroInterval);
+  }
+  
+  // Atualiza a cada minuto
+  timerTaroInterval = setInterval(() => {
+    const cartasIds = ['prosperidade', 'foco', 'casa', 'alivio'];
+    let precisaAtualizar = false;
+    
+    cartasIds.forEach(cartaId => {
+      const tempoRestante = calcularTempoRestante(cartaId);
+      const timerElement = document.getElementById(`timer-${cartaId}`);
+      
+      if (timerElement) {
+        if (tempoRestante) {
+          timerElement.textContent = `Próxima abertura em: ${formatarTempoRestante(tempoRestante)}`;
+          precisaAtualizar = true;
+        } else {
+          // Tempo expirou, recria cartas para liberar
+          precisaAtualizar = true;
+        }
+      }
+    });
+    
+    // Se alguma carta pode ser aberta agora, recria o grid
+    if (precisaAtualizar) {
+      criarCartasTaro();
+    }
+  }, 60000); // Atualiza a cada minuto
+}
+
+// Abre carta de tarô com animação flip
+function abrirCartaTaroFullscreen(cartaId) {
+  const cartaElement = document.querySelector(`.taro-carta[data-carta="${cartaId}"]`);
+  if (!cartaElement) return;
+  
+  // Verifica se pode abrir
+  if (!podeAbrirCarta(cartaId)) {
+    return;
+  }
+  
+  // Verifica se já foi aberta
+  if (cartasTaroEstado[cartaId]) {
+    return;
+  }
+  
+  // Adiciona classe para flip
+  cartaElement.classList.add('flipped');
+  
+  // Marca como aberta e salva timestamp
+  cartasTaroEstado[cartaId] = true;
+  cartasTaroTimestamps[cartaId] = Date.now();
+  
+  // Salva estado
+  salvarEstado();
+  
+  // Verifica se todas as cartas foram abertas
+  const todasAbertas = Object.values(cartasTaroEstado).every(aberta => aberta === true);
+  if (todasAbertas) {
+    presentesEstado.taro = true;
+    const giftBox = document.getElementById('taro');
+    const overlay = document.getElementById('overlay-taro');
+    const status = giftBox ? (giftBox.querySelector('.gift-status') || giftBox.querySelector('.card-status')) : null;
+    
+    if (giftBox) {
+      giftBox.classList.add('aberto', 'usado');
+    }
+    
+    if (overlay) {
+      overlay.style.display = 'none';
+    }
+    
+    if (status) {
+      status.textContent = '🃏 Presente usado';
+    }
+    
+    salvarEstado();
+  }
+  
+  // Atualiza visual após animação
+  setTimeout(() => {
+    criarCartasTaro();
+  }, 800);
+}
+
+// Função para abrir uma carta de tarô (mantida para compatibilidade)
+function abrirCartaTaro(cartaId) {
+  // Se a tela fullscreen estiver aberta, usa a função nova
+  const taroFullscreen = document.getElementById('taro-fullscreen');
+  if (taroFullscreen && taroFullscreen.classList.contains('ativo')) {
+    abrirCartaTaroFullscreen(cartaId);
+    return;
+  }
+  
+  // Senão, mantém comportamento antigo (não deveria acontecer)
+  abrirCartaTaroFullscreen(cartaId);
 }
 
 // Função para mostrar o modal
@@ -446,8 +952,6 @@ function mostrarModal(presenteId) {
         <br>
         <p>O combinado é simples:<br>boa comida, companhia melhor ainda,<br>risadas no meio do caminho<br>e zero pressão pra ser algo perfeito.</p>
         <p style="margin-top: 15px; font-style: italic; opacity: 0.9;">Qualquer escolha é boa quando é a gente juntos. 💛</p>
-        <br>
-        <p>Só a gente. Do nosso jeito. 💛</p>
       </div>
     `;
   } else if (presenteId === 'carta') {
@@ -464,6 +968,10 @@ function mostrarModal(presenteId) {
         </div>
       </div>
     `;
+  } else if (presenteId === 'taro' && conteudo.temCartas) {
+    // Tarô da Positividade - abre tela fullscreen
+    mostrarTaroFullscreen();
+    return; // Não mostra modal, já abre tela fullscreen
   } else {
     // Remove classe de carta se existir
     const modalContent = document.querySelector('.modal-content');
@@ -500,10 +1008,30 @@ function mostrarModal(presenteId) {
     `;
   }
   
+  // Verifica se o presente já foi usado
+  const jaUsado = presentesEstado[presenteId];
+  
   conteudoHTML += `
-    <div style="text-align: center; margin-top: 30px;">
+    <div style="text-align: center; margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+      ${!jaUsado ? `
+        <button onclick="usarPresente('${presenteId}')" class="btn-modal-usar" style="
+          padding: 12px 30px;
+          border: none;
+          border-radius: 25px;
+          background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(74, 222, 128, 0.4);
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
+        ">
+          Usar presente ✨
+        </button>
+      ` : ''}
       <button onclick="fecharModal()" class="btn-modal-close">
-        Fechar 🐾
+        ${jaUsado ? 'Fechar 🐾' : 'Fechar'}
       </button>
     </div>
   `;
@@ -520,6 +1048,15 @@ function mostrarModal(presenteId) {
     const modalContent = document.querySelector('.modal-content');
     if (modalContent) {
       modalContent.style.animation = 'modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      
+      // Scroll suave até o modal (funciona em desktop e mobile)
+      setTimeout(() => {
+        modalContent.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center',
+          inline: 'nearest'
+        });
+      }, 50);
     }
   }, 10);
 }
@@ -567,6 +1104,64 @@ function abrirFoto(src) {
 }
 
 // Função para fechar o modal
+// Função para usar o presente (marca como usado)
+function usarPresente(presenteId) {
+  // Marca como usado
+  presentesEstado[presenteId] = true;
+  
+  const giftBox = document.getElementById(presenteId);
+  const status = giftBox ? (giftBox.querySelector('.gift-status') || giftBox.querySelector('.card-status')) : null;
+  
+  // Adiciona classe usado para ficar cinza
+  if (giftBox) {
+    giftBox.classList.add('usado');
+  }
+  
+  // Atualiza status
+  if (status) {
+    status.textContent = '🎁 Presente usado';
+  }
+  
+  // Salva estado
+  salvarEstado();
+  
+  // Fecha o modal
+  fecharModal();
+  
+  // Mostra mensagem de confirmação
+  mostrarMensagemMascote(presenteId);
+  
+  // Mostra popup de sucesso
+  setTimeout(() => {
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10003;
+      pointer-events: none;
+      animation: fadeInOut 2s ease-in-out forwards;
+    `;
+    
+    popup.innerHTML = `
+      <div style="background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); padding: 25px 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.2); text-align: center;">
+        <div style="font-size: 40px; margin-bottom: 15px;">✅</div>
+        <p style="color: white; font-size: 18px; font-weight: 600; margin: 0; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+          Presente usado! 🎁✨
+        </p>
+      </div>
+    `;
+    
+    document.body.appendChild(popup);
+    
+    setTimeout(() => {
+      popup.style.animation = 'fadeOut 0.5s ease-out forwards';
+      setTimeout(() => popup.remove(), 500);
+    }, 1500);
+  }, 100);
+}
+
 function fecharModal() {
   const modal = document.getElementById('modal');
   modal.style.display = 'none';
@@ -613,6 +1208,26 @@ function carregarEstadoSalvo() {
       opcoesJantarEscolhidas = JSON.parse(opcoesJantarSalvas);
     } catch (e) {
       console.log('Erro ao carregar opções de jantar');
+    }
+  }
+  
+  // Carrega estado das cartas de tarô
+  const cartasTaroSalvas = localStorage.getItem('cartasTaroEstado');
+  if (cartasTaroSalvas) {
+    try {
+      cartasTaroEstado = JSON.parse(cartasTaroSalvas);
+    } catch (e) {
+      console.log('Erro ao carregar estado das cartas de tarô');
+    }
+  }
+  
+  // Carrega timestamps das cartas de tarô
+  const cartasTaroTimestampsSalvos = localStorage.getItem('cartasTaroTimestamps');
+  if (cartasTaroTimestampsSalvos) {
+    try {
+      cartasTaroTimestamps = JSON.parse(cartasTaroTimestampsSalvos);
+    } catch (e) {
+      console.log('Erro ao carregar timestamps das cartas de tarô');
     }
   }
   
@@ -1054,13 +1669,30 @@ window.onload = function() {
 // Função para atualizar o visual baseado no estado
 function atualizarVisual() {
   Object.keys(presentesEstado).forEach(presenteId => {
-    if (presentesEstado[presenteId]) {
-      const card = document.getElementById(presenteId);
+    const foiRaspado = raspadinhaEstado[presenteId];
+    const foiUsado = presentesEstado[presenteId];
+    
+    if (foiRaspado) {
+      const giftBox = document.getElementById(presenteId);
       const overlay = document.getElementById(`overlay-${presenteId}`);
-      const status = card ? card.querySelector('.card-status') : null;
+      const status = giftBox ? (giftBox.querySelector('.gift-status') || giftBox.querySelector('.card-status')) : null;
+      const titulo = giftBox ? (giftBox.querySelector('.gift-titulo') || giftBox.querySelector('.card-titulo')) : null;
       
-      if (card) {
-        card.classList.add('usado');
+      if (giftBox) {
+        // Sempre marca como aberto se foi raspado
+        giftBox.classList.add('aberto');
+        
+        // Só marca como usado se realmente foi usado
+        if (foiUsado) {
+          giftBox.classList.add('usado');
+        }
+        
+        // Mostra título se presente já foi aberto
+        if (titulo) {
+          titulo.style.display = 'block';
+          titulo.style.opacity = '1';
+          titulo.style.transform = 'translateY(0)';
+        }
       }
       
       if (overlay) {
@@ -1068,7 +1700,8 @@ function atualizarVisual() {
       }
       
       if (status) {
-        status.textContent = '🎁 Presente usado';
+        // Atualiza status baseado se foi usado ou só revelado
+        status.textContent = foiUsado ? '🎁 Presente usado' : '🎁 Presente revelado';
       }
     }
   });
@@ -1079,6 +1712,8 @@ function salvarEstado() {
   localStorage.setItem('presentesEstado', JSON.stringify(presentesEstado));
   localStorage.setItem('raspadinhaEstado', JSON.stringify(raspadinhaEstado));
   localStorage.setItem('opcoesJantarEscolhidas', JSON.stringify(opcoesJantarEscolhidas));
+  localStorage.setItem('cartasTaroEstado', JSON.stringify(cartasTaroEstado));
+  localStorage.setItem('cartasTaroTimestamps', JSON.stringify(cartasTaroTimestamps));
 }
 
 // Função para criar gatinhos comemorativos quando resgata presente

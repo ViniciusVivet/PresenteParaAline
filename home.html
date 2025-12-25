@@ -59,48 +59,73 @@
   </h2>
 
   <div class="presentes">
-    <div class="card" id="massagem" data-presente="massagem">
-      <div class="card-emoji">💆</div>
-      <div class="card-titulo">Vale Massagem</div>
-      <div class="card-status">🎁 Presente disponível</div>
+    <div class="gift-box" id="massagem" data-presente="massagem">
+      <div class="gift-bow">🎀</div>
+      <div class="gift-lid"></div>
+      <div class="gift-body">
+        <div class="gift-shine"></div>
+        <div class="gift-emoji">💆</div>
+        <div class="gift-titulo" style="display: none;">Vale Massagem</div>
+        <div class="gift-status">🎁 Presente disponível</div>
+      </div>
       <!-- Overlay da raspadinha -->
       <div class="raspadinha-overlay" id="overlay-massagem">
         <div class="raspadinha-texto">👆 Raspe para revelar</div>
       </div>
     </div>
     
-    <div class="card" id="jantar" data-presente="jantar">
-      <div class="card-emoji">🍝</div>
-      <div class="card-titulo">Vale Jantar</div>
-      <div class="card-status">🎁 Presente disponível</div>
+    <div class="gift-box" id="jantar" data-presente="jantar">
+      <div class="gift-bow">🎀</div>
+      <div class="gift-lid"></div>
+      <div class="gift-body">
+        <div class="gift-shine"></div>
+        <div class="gift-emoji">🍝</div>
+        <div class="gift-titulo" style="display: none;">Vale Jantar</div>
+        <div class="gift-status">🎁 Presente disponível</div>
+      </div>
       <div class="raspadinha-overlay" id="overlay-jantar">
         <div class="raspadinha-texto">👆 Raspe para revelar</div>
       </div>
     </div>
     
-    <div class="card" id="carta" data-presente="carta">
-      <div class="card-emoji">💌</div>
-      <div class="card-titulo">Carta Secreta</div>
-      <div class="card-status">🎁 Presente disponível</div>
+    <div class="gift-box" id="carta" data-presente="carta">
+      <div class="gift-bow">🎀</div>
+      <div class="gift-lid"></div>
+      <div class="gift-body">
+        <div class="gift-shine"></div>
+        <div class="gift-emoji">💌</div>
+        <div class="gift-titulo" style="display: none;">Carta Secreta</div>
+        <div class="gift-status">🎁 Presente disponível</div>
+      </div>
       <div class="raspadinha-overlay" id="overlay-carta">
         <div class="raspadinha-texto">👆 Raspe para revelar</div>
       </div>
     </div>
     
-    <div class="card" id="foto" data-presente="foto">
-      <div class="card-emoji">📸</div>
-      <div class="card-titulo">Foto Especial</div>
-      <div class="card-status">🎁 Presente disponível</div>
+    <div class="gift-box" id="foto" data-presente="foto">
+      <div class="gift-bow">🎀</div>
+      <div class="gift-lid"></div>
+      <div class="gift-body">
+        <div class="gift-shine"></div>
+        <div class="gift-emoji">📸</div>
+        <div class="gift-titulo" style="display: none;">Foto Especial</div>
+        <div class="gift-status">🎁 Presente disponível</div>
+      </div>
       <div class="raspadinha-overlay" id="overlay-foto">
         <div class="raspadinha-texto">👆 Raspe para revelar</div>
       </div>
     </div>
     
-    <div class="card" id="video" data-presente="video">
-      <div class="card-emoji">🎥</div>
-      <div class="card-titulo">Vídeo Surpresa</div>
-      <div class="card-status">🎁 Presente disponível</div>
-      <div class="raspadinha-overlay" id="overlay-video">
+    <div class="gift-box" id="taro" data-presente="taro">
+      <div class="gift-bow">🎀</div>
+      <div class="gift-lid"></div>
+      <div class="gift-body">
+        <div class="gift-shine"></div>
+        <div class="gift-emoji">🔮</div>
+        <div class="gift-titulo" style="display: none;">Tarô da Positividade</div>
+        <div class="gift-status">🎁 Presente disponível</div>
+      </div>
+      <div class="raspadinha-overlay" id="overlay-taro">
         <div class="raspadinha-texto">👆 Raspe para revelar</div>
       </div>
     </div>
@@ -111,6 +136,25 @@
     <div class="modal-content">
       <span class="close" onclick="fecharModal()">&times;</span>
       <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Tela Fullscreen do Tarô -->
+  <div id="taro-fullscreen" class="taro-fullscreen">
+    <div class="taro-container">
+      <button class="taro-close" onclick="fecharTaroFullscreen()" title="Fechar">
+        <span>&times;</span>
+      </button>
+      <div class="taro-header">
+        <h1 class="taro-titulo">🔮 Tarô da Positividade</h1>
+        <p class="taro-intro">Bem-vinda ao Tarô da Positividade! 🌙<br>
+        Aqui você encontrará 4 cartas especiais, cada uma com uma mensagem positiva e única.<br>
+        Cada carta pode ser revelada apenas uma vez a cada 24 horas.<br>
+        Escolha com o coração e deixe que a energia positiva te guie. ✨</p>
+      </div>
+      <div class="taro-grid" id="taro-grid">
+        <!-- Cartas serão inseridas aqui via JavaScript -->
+      </div>
     </div>
   </div>
 
