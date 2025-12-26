@@ -10,6 +10,133 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Tela de Login (mostra primeiro) -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="login-emoji">🎄</div>
+        <h1 class="login-titulo">Bem-vinda ao seu presente especial</h1>
+        <p class="login-subtitulo">Faça login para acessar seus presentes</p>
+      </div>
+      
+      <form id="login-form" class="login-form">
+        <div class="login-form-group">
+          <label for="login-email">Email</label>
+          <input 
+            type="email" 
+            id="login-email" 
+            placeholder="seu@email.com" 
+            required
+            autocomplete="email"
+          >
+        </div>
+        
+        <div class="login-form-group">
+          <label for="login-senha">Senha</label>
+          <input 
+            type="password" 
+            id="login-senha" 
+            placeholder="••••••••" 
+            required
+            autocomplete="current-password"
+          >
+        </div>
+        
+        <button type="submit" class="login-btn-submit">
+          <span class="login-btn-emoji">✨</span>
+          <span>Entrar</span>
+        </button>
+      </form>
+      
+      <div class="login-divider">
+        <span>ou</span>
+      </div>
+      
+      <button class="login-btn-visitante" onclick="entrarComoVisitante()">
+        <span class="login-btn-emoji">👁️</span>
+        <span>Continuar sem login (modo visitante)</span>
+      </button>
+      
+      <div class="login-cadastro-link">
+        <p>Não tem uma conta? <a href="#" onclick="mostrarTelaCadastro(); return false;" class="login-link-cadastro">Cadastre-se aqui</a></p>
+      </div>
+      
+      <p class="login-info">
+        <small>💡 No modo visitante, seus dados ficam apenas neste dispositivo</small>
+      </p>
+    </div>
+  </div>
+  
+  <!-- Tela de Cadastro -->
+  <div id="cadastro-screen" class="login-screen" style="display: none;">
+    <div class="login-container">
+      <div class="login-header">
+        <div class="login-emoji">✨</div>
+        <h1 class="login-titulo">Criar conta</h1>
+        <p class="login-subtitulo">Cadastre-se para salvar seus presentes</p>
+      </div>
+      
+      <form id="cadastro-form" class="login-form">
+        <div class="login-form-group">
+          <label for="cadastro-nome">Nome</label>
+          <input 
+            type="text" 
+            id="cadastro-nome" 
+            placeholder="Seu nome" 
+            required
+            autocomplete="name"
+          >
+        </div>
+        
+        <div class="login-form-group">
+          <label for="cadastro-email">Email</label>
+          <input 
+            type="email" 
+            id="cadastro-email" 
+            placeholder="seu@email.com" 
+            required
+            autocomplete="email"
+          >
+        </div>
+        
+        <div class="login-form-group">
+          <label for="cadastro-senha">Senha</label>
+          <input 
+            type="password" 
+            id="cadastro-senha" 
+            placeholder="••••••••" 
+            required
+            autocomplete="new-password"
+            minlength="6"
+          >
+        </div>
+        
+        <div class="login-form-group">
+          <label for="cadastro-confirmar-senha">Confirmar senha</label>
+          <input 
+            type="password" 
+            id="cadastro-confirmar-senha" 
+            placeholder="••••••••" 
+            required
+            autocomplete="new-password"
+            minlength="6"
+          >
+        </div>
+        
+        <button type="submit" class="login-btn-submit">
+          <span class="login-btn-emoji">🎁</span>
+          <span>Criar conta</span>
+        </button>
+      </form>
+      
+      <div class="login-cadastro-link">
+        <p>Já tem uma conta? <a href="#" onclick="mostrarTelaLogin(); return false;" class="login-link-cadastro">Fazer login</a></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Conteúdo principal (oculto até fazer login) -->
+  <div id="main-content" class="main-content" style="display: none;">
   <!-- Partículas de fundo -->
   <div class="particles">
     <div class="particle"></div>
@@ -371,5 +498,6 @@
     // Inicia neve quando página carregar
     document.addEventListener('DOMContentLoaded', criarNeve);
   </script>
+  </div> <!-- Fim do main-content -->
 </body>
 </html>

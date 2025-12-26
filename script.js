@@ -218,11 +218,245 @@ let raspadinhaEstado = {
   taro: false
 };
 
-// Inicializa sistema de raspadinha quando página carrega
+// Estado de autenticação (será conectado ao Firebase depois)
+let usuarioLogado = null;
+let modoVisitante = false;
+
+// Inicializa sistema quando página carrega
 document.addEventListener('DOMContentLoaded', function() {
+  verificarAutenticacao();
+});
+
+// Verifica se usuário está autenticado ou em modo visitante
+function verificarAutenticacao() {
+  // Verifica se já está logado (será implementado com Firebase depois)
+  const usuarioSalvo = localStorage.getItem('usuarioLogado');
+  const visitanteSalvo = localStorage.getItem('modoVisitante');
+  
+  if (usuarioSalvo) {
+    // Usuário logado - mostra conteúdo principal
+    usuarioLogado = JSON.parse(usuarioSalvo);
+    mostrarConteudoPrincipal();
+  } else if (visitanteSalvo === 'true') {
+    // Modo visitante - mostra conteúdo principal
+    modoVisitante = true;
+    mostrarConteudoPrincipal();
+  } else {
+    // Não autenticado - mostra tela de login
+    mostrarTelaLogin();
+  }
+}
+
+// Mostra tela de login
+function mostrarTelaLogin() {
+  const loginScreen = document.getElementById('login-screen');
+  const cadastroScreen = document.getElementById('cadastro-screen');
+  const mainContent = document.getElementById('main-content');
+  
+  if (cadastroScreen) {
+    cadastroScreen.style.display = 'none';
+  }
+  if (loginScreen) {
+    loginScreen.style.display = 'flex';
+  }
+  if (mainContent) {
+    mainContent.style.display = 'none';
+  }
+}
+
+// Mostra conteúdo principal
+function mostrarConteudoPrincipal() {
+  const loginScreen = document.getElementById('login-screen');
+  const cadastroScreen = document.getElementById('cadastro-screen');
+  const mainContent = document.getElementById('main-content');
+  const btnLogout = document.getElementById('btn-logout');
+  
+  if (loginScreen) {
+    loginScreen.style.display = 'none';
+  }
+  if (cadastroScreen) {
+    cadastroScreen.style.display = 'none';
+  }
+  if (mainContent) {
+    mainContent.style.display = 'block';
+  }
+  
+  // Mostra botão de logout se estiver logado (não visitante)
+  if (btnLogout) {
+    if (usuarioLogado && !modoVisitante) {
+      btnLogout.style.display = 'flex';
+    } else {
+      btnLogout.style.display = 'none';
+    }
+  }
+  
+  // Inicializa sistema após mostrar conteúdo
   inicializarRaspadinhas();
   carregarEstadoSalvo();
   inicializarCliquesCards();
+}
+
+// Função de login (será conectada ao Firebase depois)
+function fazerLogin(email, senha) {
+  // TODO: Conectar com Firebase Auth
+  // Por enquanto, apenas simula login
+  return new Promise((resolve, reject) => {
+    // Simula delay de autenticação
+    setTimeout(() => {
+      // Por enquanto, aceita qualquer email/senha
+      // Depois será substituído por Firebase Auth
+      usuarioLogado = {
+        email: email,
+        uid: 'temp-' + Date.now() // Temporário até conectar Firebase
+      };
+      
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+      localStorage.removeItem('modoVisitante');
+      
+      mostrarConteudoPrincipal();
+      resolve(usuarioLogado);
+    }, 500);
+  });
+}
+
+// Função para entrar como visitante
+function entrarComoVisitante() {
+  modoVisitante = true;
+  localStorage.setItem('modoVisitante', 'true');
+  localStorage.removeItem('usuarioLogado');
+  
+  mostrarConteudoPrincipal();
+}
+
+// Mostra tela de cadastro
+function mostrarTelaCadastro() {
+  const loginScreen = document.getElementById('login-screen');
+  const cadastroScreen = document.getElementById('cadastro-screen');
+  
+  if (loginScreen) {
+    loginScreen.style.display = 'none';
+  }
+  if (cadastroScreen) {
+    cadastroScreen.style.display = 'flex';
+  }
+}
+
+
+// Função de cadastro (será conectada ao Firebase depois)
+function fazerCadastro(nome, email, senha) {
+  // TODO: Conectar com Firebase Auth
+  // Por enquanto, apenas simula cadastro
+  return new Promise((resolve, reject) => {
+    // Simula delay de cadastro
+    setTimeout(() => {
+      // Por enquanto, aceita qualquer cadastro
+      // Depois será substituído por Firebase Auth
+      usuarioLogado = {
+        nome: nome,
+        email: email,
+        uid: 'temp-' + Date.now() // Temporário até conectar Firebase
+      };
+      
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuarioLogado));
+      localStorage.removeItem('modoVisitante');
+      
+      mostrarConteudoPrincipal();
+      resolve(usuarioLogado);
+    }, 500);
+  });
+}
+
+// Função para fazer logout
+function fazerLogout() {
+  if (confirm('Tem certeza que deseja sair? Seus dados locais serão mantidos, mas você precisará fazer login novamente para sincronizar.')) {
+    usuarioLogado = null;
+    modoVisitante = false;
+    localStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('modoVisitante');
+    
+    // Esconde botão de logout
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+      btnLogout.style.display = 'none';
+    }
+    
+    // Mostra tela de login
+    mostrarTelaLogin();
+  }
+}
+
+// Handler do formulário de login
+document.addEventListener('DOMContentLoaded', function() {
+  const loginForm = document.getElementById('login-form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('login-email').value;
+      const senha = document.getElementById('login-senha').value;
+      
+      if (!email || !senha) {
+        alert('Por favor, preencha email e senha.');
+        return;
+      }
+      
+      // Mostra loading
+      const submitBtn = loginForm.querySelector('.login-btn-submit');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span>Entrando...</span>';
+      submitBtn.disabled = true;
+      
+      try {
+        await fazerLogin(email, senha);
+      } catch (error) {
+        alert('Erro ao fazer login. Tente novamente.');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  }
+  
+  // Handler do formulário de cadastro
+  const cadastroForm = document.getElementById('cadastro-form');
+  if (cadastroForm) {
+    cadastroForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const nome = document.getElementById('cadastro-nome').value.trim();
+      const email = document.getElementById('cadastro-email').value;
+      const senha = document.getElementById('cadastro-senha').value;
+      const confirmarSenha = document.getElementById('cadastro-confirmar-senha').value;
+      
+      if (!nome || !email || !senha || !confirmarSenha) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+      
+      if (senha.length < 6) {
+        alert('A senha deve ter pelo menos 6 caracteres.');
+        return;
+      }
+      
+      if (senha !== confirmarSenha) {
+        alert('As senhas não coincidem. Tente novamente.');
+        return;
+      }
+      
+      // Mostra loading
+      const submitBtn = cadastroForm.querySelector('.login-btn-submit');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span>Criando conta...</span>';
+      submitBtn.disabled = true;
+      
+      try {
+        await fazerCadastro(nome, email, senha);
+      } catch (error) {
+        alert('Erro ao criar conta. Tente novamente.');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+      }
+    });
+  }
 });
 
 // Inicializa cliques nos cards (para cards usados, mostra modal novamente)
