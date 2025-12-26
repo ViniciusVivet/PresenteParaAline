@@ -1403,6 +1403,58 @@ button::before, .btn-enter::before {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Mobile: modal ocupa mais espaço e começa mais próximo do topo */
+@media (max-width: 768px) {
+  .modal {
+    padding: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .modal-content {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 25px 25px 0 0;
+    padding: 25px 20px 30px;
+    max-height: 100vh;
+    min-height: calc(100vh - 10px);
+    position: relative;
+    top: 10px;
+  }
+  
+  .modal-content h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+  
+  #modal-body {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  
+  .close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 32px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  /* Ajusta espaçamento interno no mobile */
+  .modal-content > div {
+    margin-bottom: 15px;
+  }
+}
+
 @keyframes catCelebrateModal {
   0% {
     transform: scale(0) rotate(0deg);
@@ -1699,20 +1751,34 @@ button::before, .btn-enter::before {
 /* Responsivo para carta */
 @media (max-width: 768px) {
   .modal-content.modal-carta {
-    padding: 40px 25px;
+    padding: 25px 20px 30px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 25px 25px 0 0;
+    top: 10px;
+    min-height: calc(100vh - 10px);
+    max-height: 100vh;
+  }
+  
+  .modal-content.modal-carta .close {
+    width: 44px;
+    height: 44px;
+    font-size: 30px;
   }
   
   .carta-papel {
-    padding: 40px 30px;
+    padding: 30px 20px;
+    margin: -10px -10px 0;
   }
   
   .carta-conteudo {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.8;
   }
   
   .carta-papel::before {
-    left: 40px;
+    left: 30px;
   }
 }
 
@@ -1881,27 +1947,6 @@ button::before, .btn-enter::before {
     font-size: 45px;
   }
   
-  .modal-content {
-    width: 95%;
-    padding: 30px 20px;
-    margin: 10% auto;
-  }
-  
-  .modal-content h2 {
-    font-size: 24px;
-  }
-  
-  #modal-body {
-    font-size: 16px;
-    line-height: 1.5;
-  }
-  
-  .close {
-    font-size: 28px;
-    top: 10px;
-    right: 15px;
-  }
-  
   /* Ajustes para neve em mobile */
   .snowflake {
     font-size: 1.2em;
@@ -1951,7 +1996,7 @@ button::before, .btn-enter::before {
   
   .gift-body {
     height: 66%;
-  }
+}
   
   .gift-lid {
     height: 34%;
@@ -2039,8 +2084,27 @@ button::before, .btn-enter::before {
   }
   
   .modal-content {
-    width: 98%;
-    padding: 25px 15px;
+    width: 100%;
+    padding: 20px 15px 30px;
+    margin: 0 auto;
+    border-radius: 25px 25px 0 0;
+    top: 0;
+    min-height: 100vh;
+    max-height: 100vh;
+  }
+  
+  .modal-content h2 {
+    font-size: 20px;
+  }
+  
+  #modal-body {
+    font-size: 14px;
+  }
+  
+  .close {
+    font-size: 30px;
+    top: 12px;
+    right: 12px;
   }
   
   .mascote-img-flutuante {
@@ -3066,5 +3130,898 @@ button::before, .btn-enter::before {
     padding: 14px 30px;
     font-size: 16px;
     min-width: auto;
+  }
+}
+
+/* ============================================
+   O PROFETA DAS METAS
+   ============================================ */
+
+.profeta-fullscreen {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 25%, #24243e 50%, #1a1a2e 75%, #0f0c29 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: 10000;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.profeta-fullscreen.ativo {
+  display: block;
+}
+
+.profeta-fullscreen::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.1) 1px, transparent 1px);
+  background-size: 200px 200px, 150px 150px;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+  animation: starTwinkle 3s ease-in-out infinite;
+}
+
+.profeta-container {
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.profeta-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.profeta-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg) scale(1.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Animação inicial mística */
+.profeta-animacao-inicial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.profeta-animacao-emoji {
+  font-size: 100px;
+  margin-bottom: 30px;
+  animation: pulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 30px rgba(138, 43, 226, 0.8));
+}
+
+.profeta-animacao-titulo {
+  font-size: 42px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(138, 43, 226, 0.6);
+  font-family: 'Dancing Script', cursive;
+  animation: fadeInUp 0.8s ease-out 0.5s backwards;
+}
+
+.profeta-animacao-texto {
+  font-size: 22px;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.profeta-animacao-linha1 {
+  display: block;
+  animation: fadeInUp 0.8s ease-out 1s backwards;
+  margin-bottom: 15px;
+}
+
+.profeta-animacao-linha2 {
+  display: block;
+  animation: fadeInUp 0.8s ease-out 1.5s backwards;
+  font-style: italic;
+  color: #d4af37;
+}
+
+/* Interface principal */
+.profeta-interface {
+  display: block;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.profeta-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-top: 20px;
+}
+
+.profeta-header-emoji {
+  font-size: 60px;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 0 20px rgba(138, 43, 226, 0.6));
+}
+
+.profeta-titulo {
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(138, 43, 226, 0.5);
+  font-family: 'Dancing Script', cursive;
+}
+
+.profeta-subtitulo {
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.profeta-btn-adicionar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto 40px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.8) 0%, rgba(212, 175, 55, 0.8) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(138, 43, 226, 0.4);
+  font-family: 'Poppins', sans-serif;
+}
+
+.profeta-btn-adicionar:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 25px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(138, 43, 226, 0.6);
+  background: linear-gradient(135deg, rgba(148, 53, 236, 0.9) 0%, rgba(222, 185, 65, 0.9) 100%);
+}
+
+.profeta-btn-emoji {
+  font-size: 24px;
+}
+
+/* Seções */
+.profeta-secao {
+  margin-bottom: 50px;
+}
+
+.profeta-secao-titulo {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 25px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  font-family: 'Dancing Script', cursive;
+}
+
+.profeta-metas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Meta individual */
+.profeta-meta {
+  display: flex;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.profeta-meta:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(138, 43, 226, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.profeta-meta-concluida {
+  opacity: 0.5;
+  background: rgba(100, 100, 100, 0.2);
+  border-color: rgba(150, 150, 150, 0.3);
+}
+
+.profeta-meta-checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  padding-top: 5px;
+}
+
+.profeta-meta-checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: #8a2be2;
+}
+
+.profeta-meta-conteudo {
+  flex: 1;
+}
+
+.profeta-meta-midia-container {
+  width: 100%;
+  max-height: 300px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.profeta-meta-imagem,
+.profeta-meta-video {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+}
+
+.profeta-meta-video {
+  height: auto;
+}
+
+.profeta-meta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.profeta-meta-btn-editar {
+  background: rgba(138, 43, 226, 0.3);
+  border: 1px solid rgba(138, 43, 226, 0.5);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profeta-meta-btn-editar:hover {
+  background: rgba(138, 43, 226, 0.5);
+  transform: scale(1.1);
+}
+
+.profeta-meta-progresso-container {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profeta-meta-progresso-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.profeta-meta-progresso-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.profeta-meta-progresso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8a2be2 0%, #d4af37 100%);
+  transition: width 0.5s ease;
+  border-radius: 10px;
+}
+
+.profeta-meta-data {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+}
+
+.profeta-meta-titulo {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.profeta-meta-descricao {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 10px;
+}
+
+/* Modal adicionar/editar meta */
+.profeta-modal-meta {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(15px);
+  z-index: 20000;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+  overflow-y: auto;
+}
+
+.profeta-modal-meta.ativo {
+  display: flex;
+}
+
+.profeta-modal-content {
+  background: linear-gradient(135deg, rgba(15, 12, 41, 0.95) 0%, rgba(48, 43, 99, 0.95) 50%, rgba(36, 36, 62, 0.95) 100%);
+  border: 2px solid rgba(138, 43, 226, 0.4);
+  border-radius: 25px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  margin: 40px 20px;
+  position: relative;
+  animation: modalSlideIn 0.4s ease-out;
+}
+
+.profeta-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.profeta-modal-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.profeta-modal-titulo {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  font-family: 'Dancing Script', cursive;
+  text-align: center;
+}
+
+.profeta-form-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profeta-form-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profeta-form-grupo label {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.profeta-form-grupo input,
+.profeta-form-grupo textarea {
+  padding: 12px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.profeta-form-grupo input:focus,
+.profeta-form-grupo textarea:focus {
+  outline: none;
+  border-color: rgba(138, 43, 226, 0.6);
+  background: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
+}
+
+.profeta-form-grupo input::placeholder,
+.profeta-form-grupo textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.profeta-form-hint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.profeta-input-url {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.profeta-input-url:focus {
+  outline: none;
+  border-color: rgba(138, 43, 226, 0.6);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.profeta-preview-midia {
+  position: relative;
+  margin-top: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 300px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.profeta-preview-midia img,
+.profeta-preview-midia video {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  display: block;
+}
+
+.profeta-btn-remover-midia {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.8);
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.profeta-btn-remover-midia:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: scale(1.1);
+}
+
+.profeta-progresso-container {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profeta-progresso-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.profeta-progresso-container input[type="range"] {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  -webkit-appearance: none;
+  margin-bottom: 10px;
+}
+
+.profeta-progresso-container input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8a2be2 0%, #d4af37 100%);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.profeta-progresso-container input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8a2be2 0%, #d4af37 100%);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.profeta-progresso-valor {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.profeta-form-grupo input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: #8a2be2;
+}
+
+.profeta-form-botoes {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.profeta-btn-cancelar,
+.profeta-btn-salvar {
+  padding: 15px 35px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  min-width: 140px;
+}
+
+.profeta-btn-cancelar {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.profeta-btn-cancelar:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.profeta-btn-salvar {
+  background: linear-gradient(135deg, #8a2be2 0%, #d4af37 50%, #8a2be2 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(138, 43, 226, 0.4);
+}
+
+.profeta-btn-salvar:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 25px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(138, 43, 226, 0.6);
+}
+
+/* Responsivo - Mobile */
+@media (max-width: 768px) {
+  .profeta-fullscreen {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .profeta-container {
+    padding: 70px 15px 30px;
+    min-height: auto;
+  }
+  
+  .profeta-close {
+    top: 15px;
+    right: 15px;
+    width: 44px;
+    height: 44px;
+    font-size: 28px;
+    position: fixed;
+    z-index: 10001;
+  }
+  
+  .profeta-animacao-emoji {
+    font-size: 60px;
+  }
+  
+  .profeta-animacao-titulo {
+    font-size: 28px;
+  }
+  
+  .profeta-animacao-texto {
+    font-size: 16px;
+  }
+  
+  .profeta-header {
+    margin-bottom: 30px;
+    padding-top: 10px;
+  }
+  
+  .profeta-header-emoji {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .profeta-titulo {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  
+  .profeta-subtitulo {
+    font-size: 15px;
+  }
+  
+  .profeta-btn-adicionar {
+    padding: 14px 24px;
+    font-size: 16px;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 100%;
+    min-height: 50px;
+  }
+  
+  .profeta-btn-emoji {
+    font-size: 20px;
+  }
+  
+  .profeta-btn-texto {
+    font-size: 16px;
+  }
+  
+  .profeta-secao {
+    margin-bottom: 40px;
+  }
+  
+  .profeta-secao-titulo {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .profeta-metas-lista {
+    gap: 15px;
+  }
+  
+  .profeta-meta {
+    padding: 18px 15px;
+    gap: 15px;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  .profeta-meta-checkbox-container {
+    padding-top: 2px;
+  }
+  
+  .profeta-meta-checkbox {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .profeta-meta-conteudo {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .profeta-meta-header {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  
+  .profeta-meta-data {
+    font-size: 13px;
+  }
+  
+  .profeta-meta-btn-editar {
+    padding: 6px 10px;
+    font-size: 14px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .profeta-meta-titulo {
+    font-size: 18px;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+  }
+  
+  .profeta-meta-descricao {
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  
+  .profeta-meta-midia-container {
+    max-height: 200px;
+    margin-bottom: 12px;
+  }
+  
+  .profeta-meta-progresso-container {
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  
+  .profeta-meta-progresso-label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  
+  .profeta-meta-progresso-bar {
+    height: 16px;
+  }
+  
+  .profeta-modal-meta {
+    padding: 0;
+    align-items: flex-start;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .profeta-modal-meta.ativo {
+    display: flex;
+  }
+  
+  .profeta-modal-content {
+    padding: 30px 20px;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    border-radius: 25px 25px 0 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    top: 0;
+  }
+  
+  .profeta-modal-close {
+    width: 44px;
+    height: 44px;
+    font-size: 28px;
+    top: 15px;
+    right: 15px;
+    position: absolute;
+    z-index: 1;
+  }
+  
+  .profeta-modal-titulo {
+    font-size: 24px;
+    margin-bottom: 20px;
+    padding-right: 50px;
+  }
+  
+  .profeta-form-meta {
+    gap: 20px;
+  }
+  
+  .profeta-form-grupo {
+    margin-bottom: 20px;
+  }
+  
+  .profeta-form-grupo label {
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  
+  .profeta-form-grupo input[type="text"],
+  .profeta-form-grupo input[type="month"],
+  .profeta-form-grupo input[type="file"],
+  .profeta-form-grupo input[type="range"],
+  .profeta-form-grupo select,
+  .profeta-form-grupo textarea,
+  .profeta-input-url {
+    font-size: 15px;
+    padding: 12px 14px;
+    min-height: 44px;
+  }
+  
+  .profeta-form-grupo textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .profeta-form-grupo input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-height: 20px;
+  }
+  
+  .profeta-progresso-container {
+    margin-top: 15px;
+  }
+  
+  .profeta-form-botoes {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+  }
+  
+  .profeta-btn-cancelar,
+  .profeta-btn-salvar {
+    width: 100%;
+    padding: 16px 30px;
+    font-size: 16px;
+    min-height: 50px;
+  }
+  
+  .profeta-preview-midia {
+    margin-top: 15px;
+    max-height: 250px;
+  }
+  
+  .profeta-preview-midia img,
+  .profeta-preview-midia video {
+    max-height: 250px;
   }
 }

@@ -3,7 +3,7 @@ let presentesEstado = {
   massagem: false,
   jantar: false,
   carta: false,
-  foto: false,
+  metas: false,
   taro: false
 };
 
@@ -191,12 +191,10 @@ e a vontade sincera de fazer dar certo.
 
 Com você, tudo faz mais sentido. 🤍`
   },
-  foto: {
-    titulo: "📸 Nossas Fotos Especiais",
-    texto: `Algumas das minhas fotos favoritas nossas! Momentos especiais capturados, memórias que eu guardo com muito carinho no coração.
-
-Cada uma dessas fotos me lembra de algum momento especial que vivemos juntos. 💖`,
-    temGaleria: true // Flag para mostrar galeria
+  metas: {
+    titulo: "🔮 O Profeta das Metas",
+    texto: `Metas que constroem nosso futuro.`,
+    temProfeta: true // Flag para abrir tela fullscreen
   },
   taro: {
     titulo: "🔮 Tarô da Positividade",
@@ -216,7 +214,7 @@ let raspadinhaEstado = {
   massagem: false,
   jantar: false,
   carta: false,
-  foto: false,
+  metas: false,
   taro: false
 };
 
@@ -389,7 +387,7 @@ function revelarPresente(presenteId) {
   
   // Marca como raspado (revelado), mas NÃO como usado ainda
   raspadinhaEstado[presenteId] = true;
-  // NÃO marca como usado - só quando confirmar no modal
+  // NÃO marca como usado - só quando confirmar no modal (exceto metas que é usado automaticamente)
   
   const overlay = document.getElementById(`overlay-${presenteId}`);
   const giftBox = document.getElementById(presenteId);
@@ -402,6 +400,15 @@ function revelarPresente(presenteId) {
   setTimeout(() => {
     overlay.style.display = 'none';
   }, 500);
+  
+  // Se for metas, abre tela fullscreen após animação
+  if (presenteId === 'metas') {
+    setTimeout(() => {
+      giftBox.classList.add('aberto');
+      mostrarProfetaFullscreen();
+    }, 800);
+    return;
+  }
   
   // Anima abertura do presente
   setTimeout(() => {
@@ -534,8 +541,13 @@ function mostrarMensagemMascote(presenteId) {
 
 // Função para resgatar presente (mantida para compatibilidade)
 function resgatar(presenteId) {
-  // Se já foi raspado, apenas mostra modal
+  // Se já foi raspado, apenas mostra modal ou tela fullscreen
   if (raspadinhaEstado[presenteId]) {
+    // Se for metas, abre tela fullscreen diretamente
+    if (presenteId === 'metas') {
+      mostrarProfetaFullscreen();
+      return;
+    }
     mostrarModal(presenteId);
     return;
   }
@@ -988,6 +1000,18 @@ function abrirCartaTaro(cartaId) {
 
 // Função para mostrar o modal
 function mostrarModal(presenteId) {
+  // Se for metas, mostra a interface do Profeta diretamente
+  if (presenteId === 'metas') {
+    mostrarProfetaFullscreen();
+    return;
+  }
+  
+  // Se for taro, mostra a tela fullscreen do tarô
+  if (presenteId === 'taro') {
+    mostrarTaroFullscreen();
+    return;
+  }
+  
   const modal = document.getElementById('modal');
   const modalBody = document.getElementById('modal-body');
   const conteudo = conteudoPresentes[presenteId];
@@ -1086,33 +1110,12 @@ function mostrarModal(presenteId) {
     `;
   }
   
-  // Se for o presente de foto, mostra galeria
-  if (presenteId === 'foto' && conteudo.temGaleria) {
-    conteudoHTML += `
-      <div class="galeria-fotos" style="margin: 25px 0;">
-        <div class="galeria-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
-          <div class="galeria-item" style="position: relative; width: 100%; padding-bottom: 100%; background: rgba(0,0,0,0.2); border-radius: 15px; overflow: hidden; cursor: pointer;" onclick="abrirFoto('assets/fotos/foto1.jpg')">
-            <img src="assets/fotos/foto1.jpg" alt="Nossa foto" class="galeria-img" onerror="this.parentElement.style.display='none'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; border-radius: 15px;">
-          </div>
-          <div class="galeria-item" style="position: relative; width: 100%; padding-bottom: 100%; background: rgba(0,0,0,0.2); border-radius: 15px; overflow: hidden; cursor: pointer;" onclick="abrirFoto('assets/fotos/foto2.jpg')">
-            <img src="assets/fotos/foto2.jpg" alt="Nossa foto" class="galeria-img" onerror="this.parentElement.style.display='none'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; border-radius: 15px;">
-          </div>
-          <div class="galeria-item" style="position: relative; width: 100%; padding-bottom: 100%; background: rgba(0,0,0,0.2); border-radius: 15px; overflow: hidden; cursor: pointer;" onclick="abrirFoto('assets/fotos/foto3.jpg')">
-            <img src="assets/fotos/foto3.jpg" alt="Nossa foto" class="galeria-img" onerror="this.parentElement.style.display='none'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; border-radius: 15px;">
-          </div>
-          <div class="galeria-item" style="position: relative; width: 100%; padding-bottom: 100%; background: rgba(0,0,0,0.2); border-radius: 15px; overflow: hidden; cursor: pointer;" onclick="abrirFoto('assets/fotos/foto4.jpg')">
-            <img src="assets/fotos/foto4.jpg" alt="Nossa foto" class="galeria-img" onerror="this.parentElement.style.display='none'" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; border-radius: 15px;">
-          </div>
-        </div>
-      </div>
-    `;
-  }
   
   // Verifica se o presente já foi usado
   const jaUsado = presentesEstado[presenteId];
   
-  // Para o jantar, só mostra botão "usar presente" se NÃO for jantar (jantar não tem esse botão)
-  const mostrarBotaoUsar = presenteId !== 'jantar' && !jaUsado;
+  // Para o jantar e metas, não mostra botão "usar presente" (jantar não tem esse botão, metas é usado automaticamente)
+  const mostrarBotaoUsar = presenteId !== 'jantar' && presenteId !== 'metas' && !jaUsado;
   
   conteudoHTML += `
     <div style="text-align: center; margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
@@ -1146,20 +1149,45 @@ function mostrarModal(presenteId) {
 
   modal.style.display = 'block';
   
+  // Detecta se é mobile
+  const isMobileDevice = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
   // Animação de entrada do modal
   setTimeout(() => {
     const modalContent = document.querySelector('.modal-content');
     if (modalContent) {
       modalContent.style.animation = 'modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
       
-      // Scroll suave até o modal (funciona em desktop e mobile)
-      setTimeout(() => {
-        modalContent.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'center',
-          inline: 'nearest'
-        });
-      }, 50);
+      if (isMobileDevice) {
+        // Mobile: scroll para o topo do modal imediatamente
+        setTimeout(() => {
+          modal.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          // Garante que o conteúdo fique visível
+          setTimeout(() => {
+            const modalBody = document.getElementById('modal-body');
+            if (modalBody) {
+              modalBody.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start',
+                inline: 'nearest'
+              });
+            }
+          }, 100);
+        }, 100);
+      } else {
+        // Desktop: scroll suave até o modal (centro)
+        setTimeout(() => {
+          modalContent.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+          });
+        }, 50);
+      }
     }
   }, 10);
 }
@@ -2128,3 +2156,612 @@ style2.textContent = `
   }
 `;
 document.head.appendChild(style2);
+
+// ============================================
+// O PROFETA DAS METAS
+// ============================================
+
+// Estrutura de dados das metas
+let metasProfeta = [];
+let metaEditandoId = null;
+let midiaPreviewProfeta = null;
+let tipoMidiaPreview = null; // 'imagem', 'video', 'url'
+
+// Metas iniciais pré-carregadas
+const metasIniciais = [
+  {
+    id: 'meta-1',
+    titulo: 'Estar morando juntos na casa alugada do Vinicius',
+    dataLimite: '2026-12',
+    descricao: 'Nosso primeiro lar juntos, construindo nossa base.',
+    midia: null,
+    tipoMidia: null,
+    progresso: null,
+    concluida: false,
+    dataCriacao: Date.now()
+  },
+  {
+    id: 'meta-2',
+    titulo: 'Morar juntos no apartamento da Aline',
+    dataLimite: '2028-01',
+    descricao: 'Nosso espaço definitivo, nosso lar.',
+    midia: null,
+    tipoMidia: null,
+    progresso: null,
+    concluida: false,
+    dataCriacao: Date.now()
+  },
+  {
+    id: 'meta-3',
+    titulo: 'Ter filhos de maneira planejada',
+    dataLimite: '2030-01',
+    descricao: 'Expandir nossa família com amor e planejamento.',
+    midia: null,
+    tipoMidia: null,
+    progresso: null,
+    concluida: false,
+    dataCriacao: Date.now()
+  },
+  {
+    id: 'meta-4',
+    titulo: 'Poder se aposentar, mas focar na manutenção das empresas',
+    dataLimite: '2035-01',
+    descricao: 'Construir um império juntos, mantendo e expandindo nossos negócios.',
+    midia: null,
+    tipoMidia: null,
+    progresso: null,
+    concluida: false,
+    dataCriacao: Date.now()
+  },
+  {
+    id: 'meta-5',
+    titulo: 'Estar aposentados e viajando o mundo',
+    dataLimite: '2040-01',
+    descricao: 'Viver do que construímos juntos, explorando o mundo.',
+    midia: null,
+    tipoMidia: null,
+    progresso: null,
+    concluida: false,
+    dataCriacao: Date.now()
+  }
+];
+
+// Carrega metas do localStorage ou usa as iniciais
+function carregarMetasProfeta() {
+  const metasSalvas = localStorage.getItem('metasProfeta');
+  if (metasSalvas) {
+    try {
+      metasProfeta = JSON.parse(metasSalvas);
+      
+      // Migração: converte "imagem" para "midia" e "tipoMidia" se necessário
+      metasProfeta.forEach(meta => {
+        if (meta.imagem && !meta.midia) {
+          meta.midia = meta.imagem;
+          meta.tipoMidia = 'imagem';
+          delete meta.imagem;
+        }
+        // Garante que progresso seja null se não existir
+        if (meta.progresso === undefined) {
+          meta.progresso = null;
+        }
+      });
+      
+      // Se não tem nenhuma meta, carrega as iniciais
+      if (metasProfeta.length === 0) {
+        metasProfeta = [...metasIniciais];
+        salvarMetasProfeta();
+      } else {
+        // Salva após migração
+        salvarMetasProfeta();
+      }
+    } catch (e) {
+      console.log('Erro ao carregar metas do Profeta');
+      metasProfeta = [...metasIniciais];
+      salvarMetasProfeta();
+    }
+  } else {
+    metasProfeta = [...metasIniciais];
+    salvarMetasProfeta();
+  }
+}
+
+// Salva metas no localStorage
+function salvarMetasProfeta() {
+  localStorage.setItem('metasProfeta', JSON.stringify(metasProfeta));
+}
+
+// Mostra tela fullscreen do Profeta
+function mostrarProfetaFullscreen() {
+  const profetaFullscreen = document.getElementById('profeta-fullscreen');
+  if (!profetaFullscreen) return;
+  
+  // Carrega metas
+  carregarMetasProfeta();
+  
+  // Marca como usado automaticamente
+  presentesEstado.metas = true;
+  raspadinhaEstado.metas = true;
+  salvarEstado();
+  
+  // Atualiza visual do presente
+  const giftBox = document.getElementById('metas');
+  if (giftBox) {
+    giftBox.classList.add('aberto', 'usado');
+    const status = giftBox.querySelector('.gift-status');
+    if (status) {
+      status.textContent = '🎁 Presente usado';
+    }
+  }
+  
+  // Mostra tela
+  profetaFullscreen.classList.add('ativo');
+  
+  // Mostra animação inicial
+  const animacao = document.getElementById('profeta-animacao-inicial');
+  const interface = document.getElementById('profeta-interface');
+  
+  if (animacao && interface) {
+    // Função para mostrar interface e esconder animação
+    function mostrarInterface() {
+      // Esconde animação completamente
+      animacao.style.display = 'none';
+      animacao.style.visibility = 'hidden';
+      animacao.style.opacity = '0';
+      
+      // Mostra interface
+      interface.style.display = 'block';
+      interface.style.visibility = 'visible';
+      interface.style.opacity = '1';
+      
+      // Renderiza metas
+      renderizarMetasProfeta();
+      
+      // Scroll automático para área das metas (mobile e desktop)
+      setTimeout(() => {
+        const isMobile = window.innerWidth <= 768;
+        const profetaFullscreen = document.getElementById('profeta-fullscreen');
+        
+        if (isMobile && profetaFullscreen) {
+          // Mobile: scroll para o topo do container
+          profetaFullscreen.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+          
+          // Depois scrolla para o conteúdo
+          setTimeout(() => {
+            const btnAdicionar = document.querySelector('.profeta-btn-adicionar');
+            if (btnAdicionar) {
+              btnAdicionar.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'start',
+                inline: 'nearest'
+              });
+            }
+          }, 200);
+        } else {
+          // Desktop: scroll para a seção de metas
+          const secaoMetas = document.querySelector('.profeta-secao');
+          if (secaoMetas) {
+            secaoMetas.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      }, 300);
+    }
+    
+    // Mostra animação inicial
+    animacao.style.display = 'flex';
+    animacao.style.opacity = '1';
+    interface.style.display = 'none';
+    interface.style.opacity = '0';
+    
+    // Permite clicar na animação para pular
+    animacao.style.cursor = 'pointer';
+    animacao.onclick = function() {
+      mostrarInterface();
+    };
+    
+    // Após 0.45 segundos, mostra interface automaticamente
+    setTimeout(function() {
+      mostrarInterface();
+    }, 450);
+  } else {
+    // Se não encontrou os elementos, mostra interface diretamente
+    if (interface) {
+      if (animacao) {
+        animacao.style.display = 'none';
+        animacao.style.visibility = 'hidden';
+      }
+      interface.style.display = 'block';
+      interface.style.visibility = 'visible';
+      interface.style.opacity = '1';
+      renderizarMetasProfeta();
+    } else if (animacao) {
+      // Se só tem animação, esconde ela e mostra interface depois
+      setTimeout(function() {
+        animacao.style.display = 'none';
+        animacao.style.visibility = 'hidden';
+        const interfaceEl = document.getElementById('profeta-interface');
+        if (interfaceEl) {
+          interfaceEl.style.display = 'block';
+          interfaceEl.style.visibility = 'visible';
+          interfaceEl.style.opacity = '1';
+          renderizarMetasProfeta();
+        }
+      }, 450);
+    } else {
+      // Último recurso: tenta renderizar mesmo assim
+      renderizarMetasProfeta();
+    }
+  }
+}
+
+// Fecha tela fullscreen do Profeta
+function fecharProfetaFullscreen() {
+  const profetaFullscreen = document.getElementById('profeta-fullscreen');
+  if (!profetaFullscreen) return;
+  
+  profetaFullscreen.classList.remove('ativo');
+}
+
+// Renderiza todas as metas
+function renderizarMetasProfeta() {
+  const metasAtivas = document.getElementById('profeta-metas-ativas');
+  const metasConcluidas = document.getElementById('profeta-metas-concluidas');
+  const secaoConcluidas = document.getElementById('profeta-secao-concluidas');
+  
+  if (!metasAtivas || !metasConcluidas) return;
+  
+  // Separa metas concluídas e não concluídas
+  const ativas = metasProfeta.filter(m => !m.concluida);
+  const concluidas = metasProfeta.filter(m => m.concluida);
+  
+  // Ordena ativas por data (mais próxima primeiro)
+  ativas.sort((a, b) => {
+    const dataA = new Date(a.dataLimite + '-01');
+    const dataB = new Date(b.dataLimite + '-01');
+    return dataA - dataB;
+  });
+  
+  // Ordena concluídas por data (mais recente primeiro)
+  concluidas.sort((a, b) => {
+    const dataA = new Date(a.dataLimite + '-01');
+    const dataB = new Date(b.dataLimite + '-01');
+    return dataB - dataA;
+  });
+  
+  // Renderiza metas ativas
+  metasAtivas.innerHTML = '';
+  ativas.forEach(meta => {
+    metasAtivas.innerHTML += criarHTMLMeta(meta);
+  });
+  
+  // Renderiza metas concluídas
+  metasConcluidas.innerHTML = '';
+  concluidas.forEach(meta => {
+    metasConcluidas.innerHTML += criarHTMLMeta(meta);
+  });
+  
+  // Mostra/oculta seção de concluídas
+  if (concluidas.length > 0) {
+    secaoConcluidas.style.display = 'block';
+  } else {
+    secaoConcluidas.style.display = 'none';
+  }
+}
+
+// Cria HTML de uma meta
+function criarHTMLMeta(meta) {
+  const dataFormatada = formatarDataMeta(meta.dataLimite);
+  const concluidaClass = meta.concluida ? 'profeta-meta-concluida' : '';
+  
+  // Mídia (imagem ou vídeo)
+  let midiaHTML = '';
+  if (meta.midia) {
+    if (meta.tipoMidia === 'video' || (meta.tipoMidia === 'url' && meta.midia.match(/\.(mp4|webm|ogg)$/i))) {
+      midiaHTML = `
+        <div class="profeta-meta-midia-container">
+          <video src="${meta.midia}" controls class="profeta-meta-video"></video>
+        </div>
+      `;
+    } else {
+      midiaHTML = `
+        <div class="profeta-meta-midia-container">
+          <img src="${meta.midia}" alt="${meta.titulo}" class="profeta-meta-imagem">
+        </div>
+      `;
+    }
+  }
+  
+  // Barra de progresso
+  const progressoHTML = meta.progresso !== null && meta.progresso !== undefined ? `
+    <div class="profeta-meta-progresso-container">
+      <div class="profeta-meta-progresso-label">Progresso: ${meta.progresso}%</div>
+      <div class="profeta-meta-progresso-bar">
+        <div class="profeta-meta-progresso-fill" style="width: ${meta.progresso}%"></div>
+      </div>
+    </div>
+  ` : '';
+  
+  return `
+    <div class="profeta-meta ${concluidaClass}" data-meta-id="${meta.id}">
+      <div class="profeta-meta-checkbox-container">
+        <input type="checkbox" 
+               class="profeta-meta-checkbox" 
+               ${meta.concluida ? 'checked' : ''} 
+               onchange="toggleMetaConcluida('${meta.id}')">
+      </div>
+      <div class="profeta-meta-conteudo">
+        ${midiaHTML}
+        <div class="profeta-meta-header">
+          <div class="profeta-meta-data">📅 ${dataFormatada}</div>
+          <button class="profeta-meta-btn-editar" onclick="mostrarModalAdicionarMeta('${meta.id}')" title="Editar meta">
+            ✏️
+          </button>
+        </div>
+        <h3 class="profeta-meta-titulo">${meta.titulo}</h3>
+        ${meta.descricao ? `<p class="profeta-meta-descricao">${meta.descricao}</p>` : ''}
+        ${progressoHTML}
+      </div>
+    </div>
+  `;
+}
+
+// Formata data da meta
+function formatarDataMeta(dataLimite) {
+  if (!dataLimite) return 'Sem data';
+  const [ano, mes] = dataLimite.split('-');
+  const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+                 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  return `${meses[parseInt(mes) - 1]}/${ano}`;
+}
+
+// Toggle meta concluída
+function toggleMetaConcluida(metaId) {
+  const meta = metasProfeta.find(m => m.id === metaId);
+  if (!meta) return;
+  
+  meta.concluida = !meta.concluida;
+  salvarMetasProfeta();
+  
+  // Animação e reordenação
+  setTimeout(() => {
+    renderizarMetasProfeta();
+  }, 300);
+}
+
+// Mostra modal para adicionar/editar meta
+function mostrarModalAdicionarMeta(metaId = null) {
+  const modal = document.getElementById('profeta-modal-meta');
+  const form = document.getElementById('profeta-form-meta');
+  const tituloModal = document.getElementById('profeta-modal-titulo-texto');
+  
+  if (!modal || !form) return;
+  
+  metaEditandoId = metaId;
+  midiaPreviewProfeta = null;
+  tipoMidiaPreview = null;
+  
+  if (metaId) {
+    // Editando
+    const meta = metasProfeta.find(m => m.id === metaId);
+    if (meta) {
+      document.getElementById('profeta-input-titulo').value = meta.titulo;
+      document.getElementById('profeta-input-data').value = meta.dataLimite;
+      document.getElementById('profeta-input-descricao').value = meta.descricao || '';
+      document.getElementById('profeta-input-url').value = '';
+      
+      // Carrega mídia se existir
+      if (meta.midia) {
+        midiaPreviewProfeta = meta.midia;
+        tipoMidiaPreview = meta.tipoMidia || 'imagem';
+        mostrarPreviewMidia(meta.midia, tipoMidiaPreview);
+      } else {
+        document.getElementById('profeta-preview-midia').style.display = 'none';
+      }
+      
+      // Carrega progresso se existir
+      if (meta.progresso !== null && meta.progresso !== undefined) {
+        document.getElementById('profeta-check-progresso').checked = true;
+        document.getElementById('profeta-progresso-container').style.display = 'block';
+        document.getElementById('profeta-input-progresso').value = meta.progresso;
+        document.getElementById('profeta-progresso-valor-texto').textContent = meta.progresso + '%';
+      } else {
+        document.getElementById('profeta-check-progresso').checked = false;
+        document.getElementById('profeta-progresso-container').style.display = 'none';
+      }
+      
+      tituloModal.textContent = 'Editar Meta';
+    }
+  } else {
+    // Nova meta
+    form.reset();
+    document.getElementById('profeta-preview-midia').style.display = 'none';
+    document.getElementById('profeta-check-progresso').checked = false;
+    document.getElementById('profeta-progresso-container').style.display = 'none';
+    document.getElementById('profeta-progresso-valor-texto').textContent = '0%';
+    tituloModal.textContent = 'Adicionar Nova Meta';
+  }
+  
+  modal.classList.add('ativo');
+}
+
+// Fecha modal
+function fecharModalAdicionarMeta() {
+  const modal = document.getElementById('profeta-modal-meta');
+  if (!modal) return;
+  
+  modal.classList.remove('ativo');
+  metaEditandoId = null;
+  midiaPreviewProfeta = null;
+  tipoMidiaPreview = null;
+  document.getElementById('profeta-form-meta').reset();
+  document.getElementById('profeta-preview-midia').style.display = 'none';
+  document.getElementById('profeta-check-progresso').checked = false;
+  document.getElementById('profeta-progresso-container').style.display = 'none';
+}
+
+// Salva meta (adiciona ou edita)
+function salvarMetaProfeta(event) {
+  if (event) event.preventDefault();
+  
+  const titulo = document.getElementById('profeta-input-titulo').value.trim();
+  const dataLimite = document.getElementById('profeta-input-data').value;
+  const descricao = document.getElementById('profeta-input-descricao').value.trim();
+  const temProgresso = document.getElementById('profeta-check-progresso').checked;
+  const progresso = temProgresso ? parseInt(document.getElementById('profeta-input-progresso').value) : null;
+  
+  if (!titulo || !dataLimite) {
+    alert('Por favor, preencha título e data limite.');
+    return;
+  }
+  
+  if (metaEditandoId) {
+    // Edita meta existente
+    const meta = metasProfeta.find(m => m.id === metaEditandoId);
+    if (meta) {
+      meta.titulo = titulo;
+      meta.dataLimite = dataLimite;
+      meta.descricao = descricao;
+      meta.midia = midiaPreviewProfeta || null;
+      meta.tipoMidia = tipoMidiaPreview || null;
+      meta.progresso = progresso;
+    }
+  } else {
+    // Nova meta
+    const novaMeta = {
+      id: 'meta-' + Date.now(),
+      titulo: titulo,
+      dataLimite: dataLimite,
+      descricao: descricao,
+      midia: midiaPreviewProfeta || null,
+      tipoMidia: tipoMidiaPreview || null,
+      progresso: progresso,
+      concluida: false,
+      dataCriacao: Date.now()
+    };
+    metasProfeta.push(novaMeta);
+  }
+  
+  salvarMetasProfeta();
+  renderizarMetasProfeta();
+  fecharModalAdicionarMeta();
+}
+
+// Preview de mídia (imagem/vídeo)
+document.addEventListener('DOMContentLoaded', function() {
+  const inputImagem = document.getElementById('profeta-input-imagem');
+  if (inputImagem) {
+    inputImagem.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          midiaPreviewProfeta = e.target.result;
+          // Determina se é vídeo ou imagem
+          if (file.type.startsWith('video/')) {
+            tipoMidiaPreview = 'video';
+          } else {
+            tipoMidiaPreview = 'imagem';
+          }
+          mostrarPreviewMidia(e.target.result, tipoMidiaPreview);
+          // Limpa URL se tiver arquivo
+          document.getElementById('profeta-input-url').value = '';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+  
+  const inputURL = document.getElementById('profeta-input-url');
+  if (inputURL) {
+    inputURL.addEventListener('blur', function(e) {
+      const url = e.target.value.trim();
+      if (url) {
+        midiaPreviewProfeta = url;
+        // Tenta determinar se é vídeo pela extensão
+        if (url.match(/\.(mp4|webm|ogg|mov)$/i)) {
+          tipoMidiaPreview = 'video';
+        } else {
+          tipoMidiaPreview = 'url';
+        }
+        mostrarPreviewMidia(url, tipoMidiaPreview);
+        // Limpa arquivo se tiver URL
+        document.getElementById('profeta-input-imagem').value = '';
+      }
+    });
+  }
+  
+  const formMeta = document.getElementById('profeta-form-meta');
+  if (formMeta) {
+    formMeta.addEventListener('submit', salvarMetaProfeta);
+  }
+});
+
+// Mostra preview da mídia (imagem ou vídeo)
+function mostrarPreviewMidia(src, tipo) {
+  const preview = document.getElementById('profeta-preview-midia');
+  const conteudo = document.getElementById('profeta-preview-conteudo');
+  if (!preview || !conteudo) return;
+  
+  conteudo.innerHTML = '';
+  
+  if (tipo === 'video' || src.match(/\.(mp4|webm|ogg|mov)$/i)) {
+    const video = document.createElement('video');
+    video.src = src;
+    video.controls = true;
+    video.style.cssText = 'width: 100%; max-height: 300px; border-radius: 12px;';
+    conteudo.appendChild(video);
+  } else {
+    const img = document.createElement('img');
+    img.src = src;
+    img.style.cssText = 'width: 100%; max-height: 300px; object-fit: contain; border-radius: 12px;';
+    img.onerror = function() {
+      conteudo.innerHTML = '<p style="color: rgba(255,255,255,0.7); padding: 20px; text-align: center;">Não foi possível carregar a imagem/vídeo. Verifique a URL.</p>';
+    };
+    conteudo.appendChild(img);
+  }
+  
+  preview.style.display = 'block';
+}
+
+// Remove preview da mídia
+function removerMidiaPreview() {
+  const preview = document.getElementById('profeta-preview-midia');
+  const inputImagem = document.getElementById('profeta-input-imagem');
+  const inputURL = document.getElementById('profeta-input-url');
+  
+  if (preview) {
+    preview.style.display = 'none';
+  }
+  if (inputImagem) {
+    inputImagem.value = '';
+  }
+  if (inputURL) {
+    inputURL.value = '';
+  }
+  midiaPreviewProfeta = null;
+  tipoMidiaPreview = null;
+}
+
+// Toggle barra de progresso
+function toggleBarraProgresso() {
+  const checkbox = document.getElementById('profeta-check-progresso');
+  const container = document.getElementById('profeta-progresso-container');
+  
+  if (checkbox && container) {
+    if (checkbox.checked) {
+      container.style.display = 'block';
+    } else {
+      container.style.display = 'none';
+    }
+  }
+}
+
+// Atualiza valor do progresso
+function atualizarValorProgresso(valor) {
+  const texto = document.getElementById('profeta-progresso-valor-texto');
+  if (texto) {
+    texto.textContent = valor + '%';
+  }
+}

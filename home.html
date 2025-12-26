@@ -102,16 +102,16 @@
       </div>
     </div>
     
-    <div class="gift-box" id="foto" data-presente="foto">
+    <div class="gift-box" id="metas" data-presente="metas">
       <div class="gift-bow">🎀</div>
       <div class="gift-lid"></div>
       <div class="gift-body">
         <div class="gift-shine"></div>
-        <div class="gift-emoji">📸</div>
-        <div class="gift-titulo" style="display: none;">Foto Especial</div>
+        <div class="gift-emoji">⭐</div>
+        <div class="gift-titulo" style="display: none;">O Profeta das Metas</div>
         <div class="gift-status">🎁 Presente disponível</div>
       </div>
-      <div class="raspadinha-overlay" id="overlay-foto">
+      <div class="raspadinha-overlay" id="overlay-metas">
         <div class="raspadinha-texto">👆 Raspe para revelar</div>
       </div>
     </div>
@@ -175,6 +175,117 @@
     <div class="modal-content">
       <span class="close" onclick="fecharModal()">&times;</span>
       <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Tela Fullscreen do Profeta das Metas -->
+  <div id="profeta-fullscreen" class="profeta-fullscreen">
+    <div class="profeta-container">
+      <button class="profeta-close" onclick="fecharProfetaFullscreen()" title="Fechar">
+        <span>&times;</span>
+      </button>
+      
+      <!-- Animação inicial mística -->
+      <div id="profeta-animacao-inicial" class="profeta-animacao-inicial">
+        <div class="profeta-animacao-emoji">⭐</div>
+        <h2 class="profeta-animacao-titulo">Você abriu este presente</h2>
+        <p class="profeta-animacao-texto">
+          <span class="profeta-animacao-linha1">O Profeta das Metas foi despertado.</span>
+          <span class="profeta-animacao-linha2">Tudo que for escrito aqui é compromisso, não promessa.</span>
+        </p>
+      </div>
+      
+      <!-- Interface principal (oculta inicialmente) -->
+      <div id="profeta-interface" class="profeta-interface" style="display: none;">
+        <div class="profeta-header">
+          <div class="profeta-header-emoji">⭐</div>
+          <h1 class="profeta-titulo">O Profeta das Metas</h1>
+          <p class="profeta-subtitulo">Metas que constroem nosso futuro</p>
+        </div>
+        
+        <!-- Botão adicionar meta -->
+        <button class="profeta-btn-adicionar" onclick="mostrarModalAdicionarMeta()">
+          <span class="profeta-btn-emoji">✨</span>
+          <span class="profeta-btn-texto">Adicionar nova meta</span>
+        </button>
+        
+        <!-- Lista de metas não concluídas -->
+        <div class="profeta-secao">
+          <h2 class="profeta-secao-titulo">Metas em Andamento</h2>
+          <div id="profeta-metas-ativas" class="profeta-metas-lista">
+            <!-- Metas serão injetadas aqui -->
+          </div>
+        </div>
+        
+        <!-- Lista de metas concluídas -->
+        <div class="profeta-secao" id="profeta-secao-concluidas" style="display: none;">
+          <h2 class="profeta-secao-titulo">Metas Cumpridas ✨</h2>
+          <div id="profeta-metas-concluidas" class="profeta-metas-lista profeta-metas-concluidas">
+            <!-- Metas concluídas serão injetadas aqui -->
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal para adicionar/editar meta -->
+    <div id="profeta-modal-meta" class="profeta-modal-meta">
+      <div class="profeta-modal-content">
+        <button class="profeta-modal-close" onclick="fecharModalAdicionarMeta()" title="Fechar">
+          <span>&times;</span>
+        </button>
+        <h2 class="profeta-modal-titulo" id="profeta-modal-titulo-texto">Adicionar Nova Meta</h2>
+        <form id="profeta-form-meta" class="profeta-form-meta">
+          <div class="profeta-form-grupo">
+            <label>Título da Meta *</label>
+            <input type="text" id="profeta-input-titulo" required placeholder="Ex: Morar juntos">
+          </div>
+          
+          <div class="profeta-form-grupo">
+            <label>Data Limite *</label>
+            <input type="month" id="profeta-input-data" required>
+          </div>
+          
+          <div class="profeta-form-grupo">
+            <label>Descrição (opcional)</label>
+            <textarea id="profeta-input-descricao" rows="4" placeholder="Descreva sua meta..."></textarea>
+          </div>
+          
+          <div class="profeta-form-grupo">
+            <label>Imagem ou Vídeo (opcional)</label>
+            <input type="file" id="profeta-input-imagem" accept="image/*,video/*">
+            <div class="profeta-form-hint">Ou cole uma URL de imagem/vídeo:</div>
+            <input type="url" id="profeta-input-url" placeholder="https://..." class="profeta-input-url">
+            <div id="profeta-preview-midia" class="profeta-preview-midia" style="display: none;">
+              <div id="profeta-preview-conteudo"></div>
+              <button type="button" onclick="removerMidiaPreview()" class="profeta-btn-remover-midia">✖</button>
+            </div>
+          </div>
+          
+          <div class="profeta-form-grupo">
+            <label>
+              <input type="checkbox" id="profeta-check-progresso" onchange="toggleBarraProgresso()">
+              Adicionar barra de progresso
+            </label>
+            <div id="profeta-progresso-container" class="profeta-progresso-container" style="display: none;">
+              <label>Progresso (%)</label>
+              <input type="range" id="profeta-input-progresso" min="0" max="100" value="0" 
+                     oninput="atualizarValorProgresso(this.value)">
+              <div class="profeta-progresso-valor">
+                <span id="profeta-progresso-valor-texto">0%</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="profeta-form-botoes">
+            <button type="button" class="profeta-btn-cancelar" onclick="fecharModalAdicionarMeta()">
+              Cancelar
+            </button>
+            <button type="submit" class="profeta-btn-salvar">
+              Salvar Meta ✨
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
